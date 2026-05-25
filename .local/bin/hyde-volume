@@ -1,0 +1,79 @@
+#!/usr/bin/env bash
+
+notify_id=8
+
+print_usage() {
+    cat <<EOF
+Usage: $(basename "$0") -o|-i {i|d|m} [step]
+  -o   Output device (speakers)
+  -i   Input device (microphone)
+  i    Increase volume
+  d    Decrease volume
+  m    Toggle mute
+
+Examples:
+  $(basename "$0") -o i 10    # Increase output by 10%
+  $(basename "$0") -i d       # Decrease input by default step (5%)
+  $(basename "$0") -o m       # Toggle output mute
+EOF
+    exit 1
+}
+
+send_notification() {
+    local pct bar icon angle
+
+    if [ "$srce" = "--default-source" ]; then
+        pct=$(pamixer --default-source --get-volume)
+        muted=$(pamixer --default-source --get-mute)
+        dev=$(pamixer --list-sources | awk -F '"' 'END {print $(NF - 1)}')
+    else
+        pct=$(pamixer --get-volume)
+        muted=$(pamixer --get-mute)
+        dev=$(pamixer --get-default-sink | awk -F '"' 'END {print $(NF - 1)}')
+    fi
+
+    filled=$((pct / 10))
+    [ "$filled" -gt 10 ] && filled=10
+    empty=$((10 - filled))
+    bar=""
+    for ((i = 0; i < filled; i++)); do bar+="█"; done
+    for ((i = 0; i < empty; i++)); do bar+="░"; done
+
+    if [ "$muted" = "true" ]; then
+        [ "$srce" = "--default-source" ] && icon="audio-input-microphone" || icon="notification-audio-volume-muted"
+        notify-send -a "hyde" -r "$notify_id" -t 800 -i "$icon" "MUTED" "$dev"
+    else
+        [ "$srce" = "--default-source" ] && icon="audio-input-microphone" || icon="notification-audio-volume-high"
+        notify-send -a "hyde" -r "$notify_id" -t 800 -i "$icon" "$pct% $bar" "$dev"
+    fi
+}
+
+srce=""
+
+while getopts "oi" opt; do
+    case $opt in
+        o) srce="" ;;
+        i) srce="--default-source" ;;
+        *) print_usage ;;
+    esac
+done
+shift $((OPTIND - 1))
+
+[ -z "$1" ] && print_usage
+step="${2:-5}"
+
+case $1 in
+    i)
+        [ "$srce" = "--default-source" ] && pamixer --default-source -i "$step" || pamixer -i "$step"
+        send_notification
+        ;;
+    d)
+        [ "$srce" = "--default-source" ] && pamixer --default-source -d "$step" || pamixer -d "$step"
+        send_notification
+        ;;
+    m)
+        [ "$srce" = "--default-source" ] && pamixer --default-source -t || pamixer -t
+        send_notification
+        ;;
+    *) print_usage ;;
+esac

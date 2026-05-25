@@ -1,0 +1,1 @@
+/home/razer/.config/RHPTheme/Theme/neovim.lua

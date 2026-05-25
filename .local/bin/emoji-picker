@@ -1,0 +1,40 @@
+#!/usr/bin/env bash
+pkill -u "$USER" rofi 2>/dev/null
+
+EMOJI_DIR="$HOME/.local/share/hyde"
+EMOJI_DATA="$EMOJI_DIR/emoji.db"
+CACHE_DIR="$HOME/.cache/hyde"
+RECENT_DATA="$CACHE_DIR/landing/show_emoji.recent"
+
+mkdir -p "$(dirname "$RECENT_DATA")"
+[[ ! -f "$RECENT_DATA" ]] && echo "😀 grinning face" > "$RECENT_DATA"
+
+save_recent_entry() {
+    local emoji_line="$1"
+    {
+        echo "$emoji_line"
+        cat "$RECENT_DATA"
+    } | awk '!seen[$0]++' > "${RECENT_DATA}.tmp" && mv "${RECENT_DATA}.tmp" "$RECENT_DATA"
+}
+
+get_emoji_selection() {
+    awk '!seen[$0]++' "$RECENT_DATA" "$EMOJI_DATA" | \
+    rofi -dmenu -i -p "emoji" \
+        -theme-str "entry { placeholder: \"🔎 Emoji\";}" \
+        -theme-str "listview {columns: 9;}" \
+        -matching fuzzy -no-custom
+}
+
+main() {
+    local data_emoji
+    data_emoji=$(get_emoji_selection)
+    [[ -z "$data_emoji" ]] && exit 0
+    local selected_emoji_char
+    selected_emoji_char=$(printf "%s" "$data_emoji" | cut -d' ' -f1 | xargs)
+    if [[ -n "$selected_emoji_char" ]]; then
+        printf "%s" "$selected_emoji_char" | wl-copy
+        save_recent_entry "$data_emoji"
+    fi
+}
+
+main "$@"

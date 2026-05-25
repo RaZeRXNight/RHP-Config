@@ -1,0 +1,184 @@
+#!/usr/bin/env bash
+SUNSET_CONF="${XDG_STATE_HOME:-$HOME/.local/state}/hyprsunset"
+DEFAULT_TEMP=6000
+DEFAULT_GAMMA=100
+TEMP_STEP=500
+GAMMA_STEP=5
+MIN_TEMP=1000
+MAX_TEMP=20000
+MIN_GAMMA=20
+MAX_GAMMA=100
+NOTIFY=true
+
+mkdir -p "$(dirname "$SUNSET_CONF")"
+
+if [ ! -f "$SUNSET_CONF" ]; then
+    printf "%d|%d|%d|%d\n" "$DEFAULT_TEMP" "$DEFAULT_GAMMA" 1 "$DEFAULT_TEMP" > "$SUNSET_CONF"
+fi
+
+IFS='|' read -r currentTemp currentGamma toggle_mode identity_temp < "$SUNSET_CONF"
+[ -z "$currentTemp" ] && currentTemp=$DEFAULT_TEMP
+[ -z "$currentGamma" ] && currentGamma=$DEFAULT_GAMMA
+[ -z "$toggle_mode" ] && toggle_mode=1
+[ -z "$identity_temp" ] && identity_temp=$DEFAULT_TEMP
+
+[[ $currentTemp =~ ^[0-9]+$ ]] || currentTemp=$DEFAULT_TEMP
+[[ $identity_temp =~ ^[0-9]+$ ]] || identity_temp=$DEFAULT_TEMP
+
+save_state() {
+    printf "%d|%d|%d|%d\n" "$currentTemp" "$currentGamma" "$toggle_mode" "$identity_temp" > "$SUNSET_CONF"
+}
+
+send_notification() {
+    local title message
+    if [ "$action" = "toggle" ]; then
+        if [ "$toggle_mode" -eq 1 ]; then
+            title="Hyprsunset: ON"
+        else
+            title="Hyprsunset: OFF"
+            message=""
+        fi
+    elif [ -n "$newTemp" ]; then
+        title="Mode: Temperature"
+        message="${newTemp}K"
+    elif [ -n "$newGamma" ]; then
+        title="Mode: Gamma"
+        message="$newGamma"
+    fi
+    if [ -n "$message" ]; then
+        notify-send -a "Hyprsunset" -r 19 -t 800 -i redshift "$message" "$title"
+    else
+        notify-send -a "Hyprsunset" -r 19 -t 800 -i redshift "$title"
+    fi
+}
+
+clamp_temp() { local t=$1; [ "$t" -lt "$MIN_TEMP" ] && t=$MIN_TEMP; [ "$t" -gt "$MAX_TEMP" ] && t=$MAX_TEMP; echo "$t"; }
+clamp_gamma() { local g=$1; [ "$g" -lt "$MIN_GAMMA" ] && g=$MIN_GAMMA; [ "$g" -gt "$MAX_GAMMA" ] && g=$MAX_GAMMA; echo "$g"; }
+
+show_help() {
+    cat <<EOF
+Usage: $(basename "$0") [OPTIONS]
+
+Options:
+    --cm MODE            Color mode: 'temp' or 'gamma'
+    -i, --increase [N]   Increase value
+    -d, --decrease [N]   Decrease value
+    -s, --set VALUE      Set specific value
+    -r, --read           Read current values
+    -t, --toggle         Toggle on/off
+    -q, --quiet          Disable notifications
+    -h, --help           Show this help
+
+Examples:
+    $(basename "$0") -r              # Read current values
+    $(basename "$0") --cm temp -i    # Increase temp by 500K
+    $(basename "$0") --cm temp -d 1000  # Decrease temp by 1000K
+    $(basename "$0") --cm temp -s 4000  # Set temp to 4000K
+    $(basename "$0") -t              # Toggle on/off
+EOF
+}
+
+[ -z "$*" ] && show_help && exit 0
+
+LONGOPTS="cm:,increase:,decrease:,set:,read,toggle,quiet,help"
+SHORTOPTS="i:d:s:rtqh"
+PARSED=$(getopt --options $SHORTOPTS --longoptions "$LONGOPTS" --name "$0" -- "$@") || exit 2
+eval set -- "$PARSED"
+
+action=""
+color_mode="temp"
+custom_step=""
+newTemp=""
+newGamma=""
+
+while true; do
+    case "$1" in
+    --cm) color_mode="$2"; [[ "$color_mode" != "temp" && "$color_mode" != "gamma" ]] && echo "Error: mode must be temp or gamma" && exit 1; shift 2 ;;
+    -i|--increase) action="increase"; custom_step="$2"; shift 2 ;;
+    -d|--decrease) action="decrease"; custom_step="$2"; shift 2 ;;
+    -s|--set) action="set"; custom_step="$2"; shift 2 ;;
+    -r|--read) action="read"; shift ;;
+    -t|--toggle) action="toggle"; shift ;;
+    -q|--quiet) notify=false; shift ;;
+    -h|--help) show_help; exit 0 ;;
+    --) shift; break ;;
+    *) echo "Invalid option: $1"; show_help; exit 1 ;;
+    esac
+done
+
+if [ -n "$custom_step" ]; then
+    if [ "$action" = "set" ]; then
+        if [ "$color_mode" = "gamma" ]; then
+            if [[ $custom_step =~ ^[0-9]+$ ]] && [ "$custom_step" -ge "$MIN_GAMMA" ] && [ "$custom_step" -le "$MAX_GAMMA" ]; then
+                newGamma="$custom_step"
+            else
+                echo "Error: Gamma must be $MIN_GAMMA-$MAX_GAMMA"; exit 1
+            fi
+        else
+            if [ "$custom_step" = "identity" ]; then
+                newTemp="$identity_temp"; identity_requested=true
+            elif [[ $custom_step =~ ^[0-9]+$ ]] && [ "$custom_step" -ge "$MIN_TEMP" ] && [ "$custom_step" -le "$MAX_TEMP" ]; then
+                newTemp="$custom_step"
+            else
+                echo "Error: Temp must be $MIN_TEMP-$MAX_TEMP or 'identity'"; exit 1
+            fi
+        fi
+    else
+        if [ "$color_mode" = "gamma" ]; then
+            [[ $custom_step =~ ^[0-9]+$ ]] && [ "$custom_step" -ge 1 ] && [ "$custom_step" -le 50 ] && gamma_step="$custom_step"
+        else
+            [[ $custom_step =~ ^[0-9]+$ ]] && [ "$custom_step" -ge 1 ] && [ "$custom_step" -le 5000 ] && temp_step="$custom_step"
+        fi
+    fi
+fi
+
+[ -z "$action" ] && echo "Error: No action" && show_help && exit 1
+
+case $action in
+    increase)
+        if [ "$color_mode" = "gamma" ]; then
+            newGamma=$(clamp_gamma $((currentGamma + gamma_step)))
+            currentGamma="$newGamma"
+        else
+            newTemp=$(clamp_temp $((currentTemp + temp_step)))
+            currentTemp="$newTemp"
+        fi
+        save_state ;;
+    decrease)
+        if [ "$color_mode" = "gamma" ]; then
+            newGamma=$(clamp_gamma $((currentGamma - gamma_step)))
+            currentGamma="$newGamma"
+        else
+            newTemp=$(clamp_temp $((currentTemp - temp_step)))
+            currentTemp="$newTemp"
+        fi
+        save_state ;;
+    set)
+        if [ "$color_mode" = "gamma" ]; then currentGamma="$newGamma"; else currentTemp="$newTemp"; fi
+        save_state ;;
+    read) ;;
+    toggle)
+        toggle_mode=$((1 - toggle_mode))
+        save_state ;;
+esac
+
+[ "$notify" = true ] && send_notification
+
+if ! pgrep -x "hyprsunset" >/dev/null; then
+    [ -f "$XDG_RUNTIME_DIR/hypr/$HYPRLAND_INSTANCE_SIGNATURE/.hyprsunset.sock" ] && \
+        rm "$XDG_RUNTIME_DIR/hypr/$HYPRLAND_INSTANCE_SIGNATURE/.hyprsunset.sock"
+    hyprctl --quiet dispatch exec -- hyprsunset
+fi
+
+if [ "$toggle_mode" -eq 0 ]; then
+    hyprctl --quiet hyprsunset identity
+    hyprctl --quiet hyprsunset gamma "$DEFAULT_GAMMA"
+else
+    if [ "$action" = "read" ]; then
+        [ "$identity_requested" = true ] && hyprctl --quiet hyprsunset identity || hyprctl --quiet hyprsunset temperature "$currentTemp"
+        hyprctl --quiet hyprsunset gamma "$currentGamma"
+    else
+        hyprctl --quiet hyprsunset temperature "$currentTemp"
+        hyprctl --quiet hyprsunset gamma "$currentGamma"
+    fi
+fi

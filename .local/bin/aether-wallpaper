@@ -1,0 +1,7 @@
+#!/bin/bash
+# Check theme backgrounds dir first, then fall back to aether's wallpaper store
+WALLPAPER=$(ls -t ~/.config/aether/theme/backgrounds/*.{jpg,png,gif,jpeg,webp} 2>/dev/null | head -1)
+if [ -z "$WALLPAPER" ]; then
+    WALLPAPER=$(ls -t ~/.local/share/aether/wallpapers/*.{jpg,png,gif,jpeg,webp} 2>/dev/null | head -1)
+fi
+echo "$WALLPAPER"

@@ -1,0 +1,48 @@
+#!/usr/bin/env bash
+
+notify_id=7
+
+print_usage() {
+    cat <<EOF
+Usage: $(basename "$0") {i|d} [step]
+  i   Increase brightness
+  d   Decrease brightness
+
+Examples:
+  $(basename "$0") i 10    # Increase by 10%
+  $(basename "$0") d       # Decrease by default step (5%)
+EOF
+    exit 1
+}
+
+send_notification() {
+    local pct angle bar icon
+
+    pct=$(brightnessctl info | grep -oP "(?<=\()\d+(?=%)")
+    dev=$(brightnessctl info | awk -F "'" '/Device/ {print $2}')
+
+    filled=$((pct / 10))
+    empty=$((10 - filled))
+    bar=""
+    for ((i = 0; i < filled; i++)); do bar+="█"; done
+    for ((i = 0; i < empty; i++)); do bar+="░"; done
+
+    notify-send -a "hyde" -r "$notify_id" -t 800 \
+        -i "notification-display-brightness" \
+        "$pct% $bar" "$dev"
+}
+
+case $1 in
+    i|d) ;;
+    *) print_usage ;;
+esac
+
+step="${2:-5}"
+
+if [ "$1" = "i" ]; then
+    brightnessctl set +"$step"% >/dev/null
+else
+    brightnessctl set "$step"%- >/dev/null
+fi
+
+send_notification

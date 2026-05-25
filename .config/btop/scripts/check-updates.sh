@@ -1,0 +1,1 @@
+../../RHPTheme/custom/waybar/scripts/check-updates.sh

@@ -1,0 +1,7 @@
+-- Window and layer rules
+-- e.g.
+-- hl.window_rule({
+--     name  = "float-pavucontrol",
+--     match = { class = "pavucontrol" },
+--     float = true,
+-- })

@@ -1,0 +1,29 @@
+#!/usr/bin/env bash
+pkill -x rofi 2>/dev/null
+
+keyconfDir="$HOME/.config/hypr"
+confFiles=("$keyconfDir/hyprland.lua" "$keyconfDir/hyprland/keybinds.lua" "$keyconfDir/hyprland/keybinds.conf" "$keyconfDir/hyprland/userprefs.conf")
+
+kb_hint=$(grep -sh 'hl\.bind\|bind\s*=' "${confFiles[@]}" 2>/dev/null | \
+    sed -n 's/.*description\s*=\s*"\([^"]*\)".*/\1/p' | \
+    sort -u | \
+    head -50)
+
+if [ -z "$kb_hint" ]; then
+    kb_hint=$(grep -sh 'SUPER\|ALT\|CTRL\|mod' "${confFiles[@]}" 2>/dev/null | \
+        grep -oP '"[^"]*"[^"]*"[^"]*"' | head -20 || echo "No keybinds found")
+fi
+
+if [ -z "$kb_hint" ]; then
+    notify-send "Keybind Hint" "No keybinds found."
+    exit 0
+fi
+
+hypr_border=${hypr_border:-$(hyprctl -j getoption decoration:rounding | jq '.int' 2>/dev/null || echo 5)}
+wind_border=$((hypr_border * 3 / 2))
+elem_border=$([ "$hypr_border" -eq 0 ] && echo "5" || echo "$hypr_border")
+hypr_width=${hypr_width:-$(hyprctl -j getoption general:border_size | jq '.int' 2>/dev/null || echo 2)}
+r_override="window{width:45em;height:40em;border:${hypr_width}px;border-radius:${wind_border}px;} entry{border-radius:${elem_border}px;} element{border-radius:${elem_border}px;} listview{lines:20;}"
+
+echo "$kb_hint" | rofi -dmenu -i -p "⌨ Keybinds" \
+    -theme-str "entry { placeholder: \"🔍 Search keybinds\";} $r_override"

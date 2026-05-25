@@ -1,0 +1,1 @@
+../../RHPTheme/custom/waybar/scripts/obs-indicator.sh

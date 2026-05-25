@@ -1,0 +1,46 @@
+{
+  "name": "Rainy Day",
+  "palette": {
+    "colors": [
+      "#020401",
+      "#9c7d00",
+      "#5cab59",
+      "#b8a21d",
+      "#6081da",
+      "#6584dd",
+      "#00b5b8",
+      "#d1e9f5",
+      "#61645e",
+      "#c4a300",
+      "#78d565",
+      "#e0ca00",
+      "#82a2ff",
+      "#87a5ff",
+      "#32dee2",
+      "#bcf4ff"
+    ],
+    "wallpaper": "/home/razer/.local/share/aether/wallpapers/wallhaven-6lwelq.jpg",
+    "extendedColors": {
+      "accent": "#6081da",
+      "cursor": "#d1e9f5",
+      "selection_background": "#d1e9f5",
+      "selection_foreground": "#020401"
+    }
+  },
+  "adjustments": {
+    "blackPoint": 0,
+    "brightness": 0,
+    "contrast": 0,
+    "gamma": 1,
+    "highlights": 0,
+    "hueShift": 0,
+    "saturation": 0,
+    "shadows": 0,
+    "temperature": 0,
+    "tint": 0,
+    "vibrance": 0,
+    "whitePoint": 0
+  },
+  "settings": {},
+  "timestamp": 1779494043212
+}

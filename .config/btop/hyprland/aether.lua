@@ -1,0 +1,5 @@
+-- dofile(os.getenv("HOME") .. "/.config/RHPTheme/Theme/hyprland.conf")
+--
+-- hl.on("hyprland.start", function()
+-- 	hl.exec("swaybg -i $(~/.local/bin/aether-wallpaper) -m fill")
+-- end)
