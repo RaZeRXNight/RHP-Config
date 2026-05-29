@@ -16,20 +16,22 @@ EOF
 }
 
 send_notification() {
-    local pct angle bar icon
+    local pct icon
 
     pct=$(brightnessctl info | grep -oP "(?<=\()\d+(?=%)")
     dev=$(brightnessctl info | awk -F "'" '/Device/ {print $2}')
 
-    filled=$((pct / 10))
-    empty=$((10 - filled))
-    bar=""
-    for ((i = 0; i < filled; i++)); do bar+="█"; done
-    for ((i = 0; i < empty; i++)); do bar+="░"; done
+    if (( pct < 33 )); then
+        icon="display-brightness-low-symbolic"
+    elif (( pct < 66 )); then
+        icon="display-brightness-medium-symbolic"
+    else
+        icon="display-brightness-high-symbolic"
+    fi
 
-    notify-send -a "hyde" -r "$notify_id" -t 800 \
-        -i "notification-display-brightness" \
-        "$pct% $bar" "$dev"
+    notify-send -a "rhp" -r "$notify_id" -t 800 \
+        -i "$icon" -h int:value:"$pct" \
+        "$pct%" "$dev"
 }
 
 case $1 in

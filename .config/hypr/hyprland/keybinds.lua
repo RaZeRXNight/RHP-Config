@@ -124,13 +124,18 @@ hl.bind("SUPER + L", hl.dsp.exec_cmd("hyprlock"), { description = "Lock screen" 
 -- # _____________________________
 
 -- Audio
-hl.bind("F5", hl.dsp.exec_cmd("hyde-volume -o m"), { repeating = false }, { description = "Toggle mute" })
-hl.bind("F6", hl.dsp.exec_cmd("hyde-volume -o d 5"), { repeating = true }, { description = "Volume down" })
-hl.bind("F7", hl.dsp.exec_cmd("hyde-volume -o i 5"), { repeating = true }, { description = "Volume up" })
+-- Old: hyde-volume -o m
+hl.bind("F5", hl.dsp.exec_cmd("rhp-volume -o m"), { repeating = false }, { description = "Toggle mute" })
+-- Old: hyde-volume -o d 5
+hl.bind("F6", hl.dsp.exec_cmd("rhp-volume -o d 5"), { repeating = true }, { description = "Volume down" })
+-- Old: hyde-volume -o i 5
+hl.bind("F7", hl.dsp.exec_cmd("rhp-volume -o i 5"), { repeating = true }, { description = "Volume up" })
 
 -- Brightness
-hl.bind("F2", hl.dsp.exec_cmd("hyde-brightness d 5"), { repeating = true }, { description = "Brightness down" })
-hl.bind("F3", hl.dsp.exec_cmd("hyde-brightness i 5"), { repeating = true }, { description = "Brightness up" })
+-- Old: hyde-brightness d 5
+hl.bind("F2", hl.dsp.exec_cmd("rhp-brightness d 5"), { repeating = true }, { description = "Brightness down" })
+-- Old: hyde-brightness i 5
+hl.bind("F3", hl.dsp.exec_cmd("rhp-brightness i 5"), { repeating = true }, { description = "Brightness up" })
 
 -- Media
 hl.bind("F9", hl.dsp.exec_cmd("playerctl previous"), { description = "Previous track" })
@@ -138,21 +143,26 @@ hl.bind("F10", hl.dsp.exec_cmd("playerctl play-pause"), { description = "Play/Pa
 hl.bind("F11", hl.dsp.exec_cmd("playerctl next"), { description = "Next track" })
 
 -- Screenshots
-hl.bind("Print", hl.dsp.exec_cmd("omarchy-capture-screenshot fullscreen save"), { description = "Full screenshot" })
-hl.bind("SUPER + Print", hl.dsp.exec_cmd("omarchy-capture-screenshot smart"), { description = "Smart screenshot" })
+-- Old: omarchy-capture-screenshot fullscreen save
+hl.bind("Print", hl.dsp.exec_cmd("rhp-capture-screenshot fullscreen save"), { description = "Full screenshot" })
+-- Old: omarchy-capture-screenshot smart
+hl.bind("SUPER + Print", hl.dsp.exec_cmd("rhp-capture-screenshot smart"), { description = "Smart screenshot" })
 hl.bind(
 	"SUPER + ALT + Print",
-	hl.dsp.exec_cmd("omarchy-capture-screenshot region"),
+-- Old: omarchy-capture-screenshot region
+	hl.dsp.exec_cmd("rhp-capture-screenshot region"),
 	{ description = "Region screenshot" }
 )
 hl.bind(
 	"SUPER + SHIFT + R",
-	hl.dsp.exec_cmd("omarchy-capture-screenrecording"),
+-- Old: omarchy-capture-screenrecording
+	hl.dsp.exec_cmd("rhp-capture-screenrecording"),
 	{ description = "Start screen recording" }
 )
 hl.bind(
 	"SUPER + ALT + R",
-	hl.dsp.exec_cmd("omarchy-capture-screenrecording --stop-recording"),
+-- Old: omarchy-capture-screenrecording --stop-recording
+	hl.dsp.exec_cmd("rhp-capture-screenrecording --stop-recording"),
 	{ description = "Stop screen recording" }
 )
 -- # _____________________________

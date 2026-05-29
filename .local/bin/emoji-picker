@@ -1,9 +1,9 @@
 #!/usr/bin/env bash
 pkill -u "$USER" rofi 2>/dev/null
 
-EMOJI_DIR="$HOME/.local/share/hyde"
+EMOJI_DIR="$HOME/.local/share/rhp"
 EMOJI_DATA="$EMOJI_DIR/emoji.db"
-CACHE_DIR="$HOME/.cache/hyde"
+CACHE_DIR="$HOME/.cache/rhp"
 RECENT_DATA="$CACHE_DIR/landing/show_emoji.recent"
 
 mkdir -p "$(dirname "$RECENT_DATA")"

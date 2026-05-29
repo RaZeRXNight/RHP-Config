@@ -20,7 +20,7 @@ EOF
 }
 
 send_notification() {
-    local pct bar icon angle
+    local pct icon summary
 
     if [ "$srce" = "--default-source" ]; then
         pct=$(pamixer --default-source --get-volume)
@@ -32,20 +32,27 @@ send_notification() {
         dev=$(pamixer --get-default-sink | awk -F '"' 'END {print $(NF - 1)}')
     fi
 
-    filled=$((pct / 10))
-    [ "$filled" -gt 10 ] && filled=10
-    empty=$((10 - filled))
-    bar=""
-    for ((i = 0; i < filled; i++)); do bar+="█"; done
-    for ((i = 0; i < empty; i++)); do bar+="░"; done
+    if [ "$srce" = "--default-source" ]; then
+        icon="audio-input-microphone"
+    elif [ "$muted" = "true" ]; then
+        icon="audio-volume-muted"
+    elif (( pct < 33 )); then
+        icon="audio-volume-low"
+    elif (( pct < 66 )); then
+        icon="audio-volume-medium"
+    else
+        icon="audio-volume-high"
+    fi
 
     if [ "$muted" = "true" ]; then
-        [ "$srce" = "--default-source" ] && icon="audio-input-microphone" || icon="notification-audio-volume-muted"
-        notify-send -a "hyde" -r "$notify_id" -t 800 -i "$icon" "MUTED" "$dev"
+        summary="Muted ($pct%)"
     else
-        [ "$srce" = "--default-source" ] && icon="audio-input-microphone" || icon="notification-audio-volume-high"
-        notify-send -a "hyde" -r "$notify_id" -t 800 -i "$icon" "$pct% $bar" "$dev"
+        summary="$pct%"
     fi
+
+    notify-send -a "rhp" -r "$notify_id" -t 800 \
+        -i "$icon" -h int:value:"$pct" \
+        "$summary" "$dev"
 }
 
 srce=""

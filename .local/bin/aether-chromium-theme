@@ -1,0 +1,49 @@
+#!/bin/bash
+# Adapted from the omarchy-theme-hook project (imbypass/omarchy-theme-hook)
+# Applies Aether's current theme background color to Chromium
+
+COLORS_TOML="$HOME/.config/aether/theme/colors.toml"
+CHROMIUM_PREFS="$HOME/.config/chromium/Default/Preferences"
+
+if [ ! -f "$COLORS_TOML" ]; then
+    echo "aether-chromium-theme: colors.toml not found at $COLORS_TOML" >&2
+    exit 1
+fi
+
+if [ ! -f "$CHROMIUM_PREFS" ]; then
+    echo "aether-chromium-theme: Chromium Preferences not found" >&2
+    exit 1
+fi
+
+BACKGROUND=$(awk -F'=' '/^background/ {gsub(/[ "#]/, "", $2); print $2; exit}' "$COLORS_TOML")
+
+if [ -z "$BACKGROUND" ]; then
+    echo "aether-chromium-theme: could not extract background color from colors.toml" >&2
+    exit 1
+fi
+
+python3 <<EOF
+import json
+
+prefs_path = "$CHROMIUM_PREFS"
+hex_color = "$BACKGROUND".lstrip('#')
+r, g, b = int(hex_color[0:2], 16), int(hex_color[2:4], 16), int(hex_color[4:6], 16)
+
+# Chromium stores custom colors as ARGB signed int32
+argb = (255 << 24) | (r << 16) | (g << 8) | b
+if argb >= 0x80000000:
+    argb -= 0x100000000
+
+with open(prefs_path) as f:
+    prefs = json.load(f)
+
+prefs.setdefault('browser', {}).setdefault('theme', {})
+prefs['browser']['theme']['color_variant2'] = 1
+prefs['browser']['theme']['user_color2'] = argb
+prefs.setdefault('extensions', {}).setdefault('theme', {})
+prefs['extensions']['theme']['id'] = 'user_color_theme_id'
+
+with open(prefs_path, 'w') as f:
+    json.dump(prefs, f, indent=2)
+    f.write('\n')
+EOF

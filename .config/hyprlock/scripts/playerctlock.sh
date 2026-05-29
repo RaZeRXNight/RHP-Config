@@ -1,7 +1,9 @@
 #!/bin/env bash
 
-THUMB=/tmp/hyde-mpris
-THUMB_BLURRED=/tmp/hyde-mpris-blurred
+# Old: /tmp/hyde-mpris
+THUMB=/tmp/rhp-mpris
+# Old: /tmp/hyde-mpris-blurred
+THUMB_BLURRED=/tmp/rhp-mpris-blurred
 
 if [ $# -eq 0 ]; then
     echo "Usage: $0 --title | --arturl | --artist | --position | --length | --album | --source"

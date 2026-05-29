@@ -1,13 +1,13 @@
 #!/bin/bash
 
-# omarchy:summary=Take a screenshot
-# omarchy:group=capture
-# omarchy:args=[smart|region|windows|fullscreen] [slurp|copy|save] [--editor=<name>]
-# omarchy:examples=omarchy screenshot | omarchy capture screenshot region
-# omarchy:aliases=omarchy screenshot
+# rhp:summary=Take a screenshot
+# rhp:group=capture
+# rhp:args=[smart|region|windows|fullscreen] [slurp|copy|save] [--editor=<name>]
+# rhp:examples=rhp screenshot | rhp capture screenshot region
+# rhp:aliases=rhp screenshot
 
 [[ -f ~/.config/user-dirs.dirs ]] && source ~/.config/user-dirs.dirs
-OUTPUT_DIR="${OMARCHY_SCREENSHOT_DIR:-${XDG_PICTURES_DIR:-$HOME/Pictures}}"
+OUTPUT_DIR="${RHP_SCREENSHOT_DIR:-${XDG_PICTURES_DIR:-$HOME/Pictures}}"
 
 if [[ ! -d $OUTPUT_DIR ]]; then
   mkdir -p "$OUTPUT_DIR"
@@ -16,7 +16,7 @@ fi
 
 pkill slurp && exit 0
 
-SCREENSHOT_EDITOR="${OMARCHY_SCREENSHOT_EDITOR:-satty}"
+SCREENSHOT_EDITOR="${RHP_SCREENSHOT_EDITOR:-satty}"
 
 # Parse --editor flag from any position
 ARGS=()

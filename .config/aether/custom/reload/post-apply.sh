@@ -9,3 +9,5 @@ if [ -n "$WALLPAPER" ]; then
     swaybg -i "$WALLPAPER" -m fill &
     ln -sf "$WALLPAPER" ~/.config/aether/theme/backgrounds/current
 fi
+
+~/.local/bin/aether-chromium-theme
