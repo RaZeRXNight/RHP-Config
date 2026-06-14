@@ -1,0 +1,26 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+BATTERY="${1:-BAT0}"
+SYSFS="/sys/class/power_supply/$BATTERY"
+
+if [ ! -d "$SYSFS" ]; then
+    BATTERY="BAT1"
+    SYSFS="/sys/class/power_supply/$BATTERY"
+    if [ ! -d "$SYSFS" ]; then
+        exit 0
+    fi
+fi
+
+status=$(cat "$SYSFS/status" 2>/dev/null || echo "Unknown")
+capacity=$(cat "$SYSFS/capacity" 2>/dev/null || echo 100)
+
+if [ "$status" = "Discharging" ]; then
+    if [ "$capacity" -le 5 ]; then
+        notify-send -u critical -t 0 "Battery Critical" "Battery at ${capacity}% — shutting down soon"
+    elif [ "$capacity" -le 15 ]; then
+        notify-send -u critical "Battery Low" "Battery at ${capacity}% — plug in soon"
+    elif [ "$capacity" -le 20 ]; then
+        notify-send -u normal "Battery Low" "Battery at ${capacity}%"
+    fi
+fi

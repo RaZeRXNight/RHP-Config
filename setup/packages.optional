@@ -1,0 +1,12 @@
+# RHP-Config Optional Packages
+# User is prompted before installing these.
+# Lines starting with # are comments. One package per line.
+
+# --- Applications ---
+spotify-launcher
+obsidian
+lazygit
+lazydocker
+
+# --- Utilities ---
+satty

@@ -37,6 +37,10 @@ if argb >= 0x80000000:
 with open(prefs_path) as f:
     prefs = json.load(f)
 
+current = prefs.get('browser', {}).get('theme', {}).get('user_color2')
+if current == argb:
+    exit(0)
+
 prefs.setdefault('browser', {}).setdefault('theme', {})
 prefs['browser']['theme']['color_variant2'] = 1
 prefs['browser']['theme']['user_color2'] = argb

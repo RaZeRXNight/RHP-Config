@@ -62,19 +62,24 @@ All in `~/.local/bin/` — symlinked into this repo.
 
 ## Setup
 
-The `setup.sh` script should handle deployment. Suggested approach:
+Run the interactive installer:
 
-1. Back up existing `~/.config/` dirs and `~/.local/bin` that would be replaced
-2. Symlink each directory under `.config/` into `~/.config/`
-3. Symlink `.local/bin/` to `~/.local/bin/`
-4. Install Arch packages with `sudo pacman -S --needed`
+```bash
+cd ~/.RHP-Config
+./setup/install.sh
+```
+
+The installer walks through:
+1. Environment checks (Arch, sudo, git)
+2. Package installation (official repos + AUR via yay/paru)
+3. Backup of existing configs (timestamped)
+4. Symlink deployment from repo → `~/.config/` and `~/.local/bin/`
+5. Post-install: ZDOTDIR, oh-my-zsh, gitconfig, systemd services
 
 ### Manual steps after setup
 
-- ZDOTDIR: ensure `export ZDOTDIR="$HOME/.config/zsh"` is set (via `/etc/zsh/zshenv` or `~/.zshenv`)
-- `~/.gitconfig` — copy or create manually
-- Install oh-my-zsh if not already present: `sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"`
-- Set wallpaper: run `~/.local/bin/aether-wallpaper` to pick an initial wallpaper (needed for hyprlock)
+- Set Zsh as default shell: `chsh -s /bin/zsh`
+- Set wallpaper: `~/.local/bin/aether-wallpaper`
 
 ## Credits
 

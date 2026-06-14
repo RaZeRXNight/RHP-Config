@@ -1,0 +1,98 @@
+# RHP-Config Required Packages
+# Arch Linux — always installed (official packages via pacman)
+# Lines starting with # are comments. One package per line.
+# AUR packages are marked and installed via yay/paru.
+
+# --- Core Hyprland ---
+hyprland
+hyprlock
+hypridle
+hyprpolkitagent
+hyprsunset
+hyprshutdown
+
+# --- Status bar / Launchers / Menus ---
+waybar
+rofi
+wlogout
+
+# --- Terminal / Shell ---
+alacritty
+zsh
+starship
+fzf
+lsd
+fastfetch
+zoxide
+
+# --- Screenshot / Capture ---
+grim
+slurp
+wl-clipboard
+cliphist
+
+# --- Hardware Control ---
+brightnessctl
+pamixer
+playerctl
+ydotool
+
+# --- Wallpaper / Display ---
+swaybg
+hyprpicker
+
+# --- Notifications ---
+swaync
+
+# --- Audio ---
+pipewire
+pipewire-pulse
+wireplumber
+
+# --- Network / Bluetooth ---
+networkmanager
+network-manager-applet
+blueman
+
+# --- Applets / Settings ---
+pavucontrol
+qt6ct
+
+# --- Utilities ---
+jq
+curl
+imagemagick
+gum
+uwsm
+xdg-user-dirs
+xdg-utils
+pacman-contrib
+psmisc
+python
+
+# --- Fonts ---
+ttf-jetbrains-mono-nerd
+noto-fonts
+noto-fonts-emoji
+
+# --- Applications ---
+firefox
+nautilus
+neovim
+btop
+
+# --- Media / Recording ---
+ffmpeg
+v4l-utils
+mpv
+obs-studio
+power-profiles-daemon
+acpi
+wttrbar
+
+# --- AUR packages (installed via yay/paru) ---
+gpu-screen-recorder-git
+# ttf-material-symbols-variable-git  # Icon font for wlogout
+# zoom                       # Video conferencing (or install from website)
+# swayosd-git                # On-screen display overlays
+# oh-my-zsh-git              # Zsh plugin framework (or install via curl)
