@@ -1,7 +1,0 @@
--- Shared helper functions
--- e.g.
--- function is_file_exists(path)
---     local f = io.open(path, "r")
---     if f then f:close() end
---     return f ~= nil
--- end

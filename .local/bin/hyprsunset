@@ -8,7 +8,7 @@ MIN_TEMP=1000
 MAX_TEMP=20000
 MIN_GAMMA=20
 MAX_GAMMA=100
-NOTIFY=true
+notify=true
 
 mkdir -p "$(dirname "$SUNSET_CONF")"
 

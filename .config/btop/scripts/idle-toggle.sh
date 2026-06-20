@@ -1,1 +1,0 @@
-../../RHPTheme/custom/waybar/scripts/idle-toggle.sh

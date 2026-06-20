@@ -1,4 +1,0 @@
-{
-    "template": "reload.sh",
-    "destination": "~/.config/aether/theme/reload"
-}

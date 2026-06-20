@@ -1,1 +1,0 @@
-/home/razer/.config/aether/theme/neovim.lua

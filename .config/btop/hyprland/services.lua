@@ -1,2 +1,0 @@
--- Background services managed by Hyprland
--- e.g. hl.service("networkmanager", { exec = "nm-applet" })
