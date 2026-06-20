@@ -12,7 +12,6 @@ hyprsunset
 hyprshutdown
 
 # --- Status bar / Launchers / Menus ---
-waybar
 rofi
 wlogout
 
@@ -99,6 +98,7 @@ illogical-impulse-hyprland
 illogical-impulse-microtex-git
 illogical-impulse-python
 illogical-impulse-screencapture
+aether
 # ttf-material-symbols-variable-git  # Icon font for wlogout
 # zoom                       # Video conferencing (or install from website)
 # swayosd-git                # On-screen display overlays

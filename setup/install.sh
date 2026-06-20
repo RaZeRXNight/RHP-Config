@@ -338,8 +338,7 @@ EOF
 fi
 
 # Enable systemd user services
-if confirm "Enable Hyprland systemd user services (waybar, hyprpolkitagent, ydotool)?"; then
-  systemctl --user enable waybar.service 2>/dev/null || true
+if confirm "Enable Hyprland systemd user services (hyprpolkitagent, ydotool)?"; then
   systemctl --user enable hyprpolkitagent.service 2>/dev/null || true
   systemctl --user enable rhp-battery-monitor.timer 2>/dev/null || true
   systemctl --user enable ydotool.service 2>/dev/null || true
