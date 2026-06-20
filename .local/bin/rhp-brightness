@@ -1,9 +1,11 @@
 #!/usr/bin/env bash
+# DEPRECATED: Use `qs -c ii ipc call brightnessIncrease/Decrease` instead.
+# Kept for fine-step calls (SHIFT+F2/F3) which IPC doesn't support.
 
 notify_id=7
 
 print_usage() {
-    cat <<EOF
+  cat <<EOF
 Usage: $(basename "$0") {i|d} [step]
   i   Increase brightness
   d   Decrease brightness
@@ -12,39 +14,39 @@ Examples:
   $(basename "$0") i 10    # Increase by 10%
   $(basename "$0") d       # Decrease by default step (5%)
 EOF
-    exit 1
+  exit 1
 }
 
 send_notification() {
-    local pct icon
+  local pct icon
 
-    pct=$(brightnessctl info | grep -oP "(?<=\()\d+(?=%)")
-    dev=$(brightnessctl info | awk -F "'" '/Device/ {print $2}')
+  pct=$(brightnessctl info | grep -oP "(?<=\()\d+(?=%)")
+  dev=$(brightnessctl info | awk -F "'" '/Device/ {print $2}')
 
-    if (( pct < 33 )); then
-        icon="display-brightness-low-symbolic"
-    elif (( pct < 66 )); then
-        icon="display-brightness-medium-symbolic"
-    else
-        icon="display-brightness-high-symbolic"
-    fi
+  if ((pct < 33)); then
+    icon="display-brightness-low-symbolic"
+  elif ((pct < 66)); then
+    icon="display-brightness-medium-symbolic"
+  else
+    icon="display-brightness-high-symbolic"
+  fi
 
-    notify-send -a "rhp" -r "$notify_id" -t 800 \
-        -i "$icon" -h int:value:"$pct" \
-        "$pct%" "$dev"
+  # notify-send -a "rhp" -r "$notify_id" -t 800 \
+  #     -i "$icon" -h int:value:"$pct" \
+  #     "$pct%" "$dev"
 }
 
 case $1 in
-    i|d) ;;
-    *) print_usage ;;
+i | d) ;;
+*) print_usage ;;
 esac
 
 step="${2:-5}"
 
 if [ "$1" = "i" ]; then
-    brightnessctl set +"$step"% >/dev/null
+  brightnessctl set +"$step"% >/dev/null
 else
-    brightnessctl set "$step"%- >/dev/null
+  brightnessctl set "$step"%- >/dev/null
 fi
 
 send_notification

@@ -5,6 +5,17 @@
 # rhp:args=[smart|region|windows|fullscreen] [slurp|copy|save] [--editor=<name>]
 # rhp:examples=rhp screenshot | rhp capture screenshot region
 # rhp:aliases=rhp screenshot
+#
+# DEPRECATED (region mode): Use `qs -c ii msg region screenshot` instead.
+
+MODE="${1:-smart}"
+
+# Region mode → delegate to Quickshell IPC
+if [[ $MODE == "region" ]]; then
+    if command -v qs &>/dev/null; then
+        exec qs -c ii msg region screenshot
+    fi
+fi
 
 [[ -f ~/.config/user-dirs.dirs ]] && source ~/.config/user-dirs.dirs
 OUTPUT_DIR="${RHP_SCREENSHOT_DIR:-${XDG_PICTURES_DIR:-$HOME/Pictures}}"
@@ -42,7 +53,6 @@ open_editor() {
   fi
 }
 
-MODE="${1:-smart}"
 PROCESSING="${2:-slurp}"
 
 # accounting for portrait/transformed displays

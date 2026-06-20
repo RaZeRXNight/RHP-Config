@@ -6,18 +6,15 @@
 # rhp:examples=rhp screenrecord | rhp capture screenrecord --with-desktop-audio
 # rhp:aliases=rhp screenrecord
 #
-# Env: RHP_SCREENRECORD_USE_PORTAL=true skips the built-in slurp picker and
-# uses gpu-screen-recorder's xdg-desktop-portal capture backend instead. The
-# portal backend was originally added (PR #3401) for HDR-aware capture, support
-# for monitors driven by external GPUs, and window capture — enable it if any
-# of those matter to you. Off by default because the portal path can fail EGL
-# DMA-BUF modifier import on some configurations, leaving recording unable to
-# start.
-#
-# Env: RHP_SCREENRECORD_DEBUG=true appends gpu-screen-recorder's stderr (and
-# the picker target it was launched with) to /tmp/rhp-screenrecord.log so
-# users can attach a log when reporting capture failures.
+# DEPRECATED (basic start): Use `qs -c ii msg region record` instead.
+# Delegates to Quickshell IPC for plain start; advanced flags keep using gpu-screen-recorder.
 
+# Simple case: no flags → delegate to IPC
+if [[ $# -eq 0 ]] && command -v qs &>/dev/null; then
+    exec qs -c ii msg region record
+fi
+
+# --stop-recording still handled here since IPC doesn't have a stop command
 [[ -f ~/.config/user-dirs.dirs ]] && source ~/.config/user-dirs.dirs
 OUTPUT_DIR="${RHP_SCREENRECORD_DIR:-${XDG_VIDEOS_DIR:-$HOME/Videos}}"
 

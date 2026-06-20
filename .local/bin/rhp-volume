@@ -3,7 +3,7 @@
 notify_id=8
 
 print_usage() {
-    cat <<EOF
+  cat <<EOF
 Usage: $(basename "$0") -o|-i {i|d|m} [step]
   -o   Output device (speakers)
   -i   Input device (microphone)
@@ -16,53 +16,53 @@ Examples:
   $(basename "$0") -i d       # Decrease input by default step (5%)
   $(basename "$0") -o m       # Toggle output mute
 EOF
-    exit 1
+  exit 1
 }
 
 send_notification() {
-    local pct icon summary
+  local pct icon summary
 
-    if [ "$srce" = "--default-source" ]; then
-        pct=$(pamixer --default-source --get-volume)
-        muted=$(pamixer --default-source --get-mute)
-        dev=$(pamixer --list-sources | awk -F '"' 'END {print $(NF - 1)}')
-    else
-        pct=$(pamixer --get-volume)
-        muted=$(pamixer --get-mute)
-        dev=$(pamixer --get-default-sink | awk -F '"' 'END {print $(NF - 1)}')
-    fi
+  if [ "$srce" = "--default-source" ]; then
+    pct=$(pamixer --default-source --get-volume)
+    muted=$(pamixer --default-source --get-mute)
+    dev=$(pamixer --list-sources | awk -F '"' 'END {print $(NF - 1)}')
+  else
+    pct=$(pamixer --get-volume)
+    muted=$(pamixer --get-mute)
+    dev=$(pamixer --get-default-sink | awk -F '"' 'END {print $(NF - 1)}')
+  fi
 
-    if [ "$srce" = "--default-source" ]; then
-        icon="audio-input-microphone"
-    elif [ "$muted" = "true" ]; then
-        icon="audio-volume-muted"
-    elif (( pct < 33 )); then
-        icon="audio-volume-low"
-    elif (( pct < 66 )); then
-        icon="audio-volume-medium"
-    else
-        icon="audio-volume-high"
-    fi
+  if [ "$srce" = "--default-source" ]; then
+    icon="audio-input-microphone"
+  elif [ "$muted" = "true" ]; then
+    icon="audio-volume-muted"
+  elif ((pct < 33)); then
+    icon="audio-volume-low"
+  elif ((pct < 66)); then
+    icon="audio-volume-medium"
+  else
+    icon="audio-volume-high"
+  fi
 
-    if [ "$muted" = "true" ]; then
-        summary="Muted ($pct%)"
-    else
-        summary="$pct%"
-    fi
+  if [ "$muted" = "true" ]; then
+    summary="Muted ($pct%)"
+  else
+    summary="$pct%"
+  fi
 
-    notify-send -a "rhp" -r "$notify_id" -t 800 \
-        -i "$icon" -h int:value:"$pct" \
-        "$summary" "$dev"
+  # notify-send -a "rhp" -r "$notify_id" -t 800 \
+  #     -i "$icon" -h int:value:"$pct" \
+  #     "$summary" "$dev"
 }
 
 srce=""
 
 while getopts "oi" opt; do
-    case $opt in
-        o) srce="" ;;
-        i) srce="--default-source" ;;
-        *) print_usage ;;
-    esac
+  case $opt in
+  o) srce="" ;;
+  i) srce="--default-source" ;;
+  *) print_usage ;;
+  esac
 done
 shift $((OPTIND - 1))
 
@@ -70,17 +70,21 @@ shift $((OPTIND - 1))
 step="${2:-5}"
 
 case $1 in
-    i)
-        [ "$srce" = "--default-source" ] && pamixer --default-source -i "$step" || pamixer -i "$step"
-        send_notification
-        ;;
-    d)
-        [ "$srce" = "--default-source" ] && pamixer --default-source -d "$step" || pamixer -d "$step"
-        send_notification
-        ;;
-    m)
-        [ "$srce" = "--default-source" ] && pamixer --default-source -t || pamixer -t
-        send_notification
-        ;;
-    *) print_usage ;;
+i)
+  [ "$srce" = "--default-source" ] && pamixer --default-source -i "$step" || pamixer -i "$step"
+  send_notification
+  ;;
+d)
+  [ "$srce" = "--default-source" ] && pamixer --default-source -d "$step" || pamixer -d "$step"
+  send_notification
+  ;;
+m)
+  if [ "$srce" = "--default-source" ]; then
+    pamixer --default-source -t
+  else
+    pamixer -t
+  fi
+  send_notification
+  ;;
+*) print_usage ;;
 esac

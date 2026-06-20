@@ -92,6 +92,13 @@ wttrbar
 
 # --- AUR packages (installed via yay/paru) ---
 gpu-screen-recorder-git
+illogical-impulse-quickshell-git
+illogical-impulse-backlight
+illogical-impulse-bibata-modern-classic-bin
+illogical-impulse-hyprland
+illogical-impulse-microtex-git
+illogical-impulse-python
+illogical-impulse-screencapture
 # ttf-material-symbols-variable-git  # Icon font for wlogout
 # zoom                       # Video conferencing (or install from website)
 # swayosd-git                # On-screen display overlays
