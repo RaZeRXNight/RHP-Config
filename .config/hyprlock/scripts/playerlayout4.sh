@@ -1,9 +1,7 @@
 #!/bin/env bash
 
-# Old: /tmp/hyde-mpris
-THUMB=/tmp/rhp-mpris
-# Old: /tmp/hyde-mpris-blurred
-THUMB_BLURRED=/tmp/rhp-mpris-blurred
+THUMB=/tmp/hyde-mpris
+THUMB_BLURRED=/tmp/hyde-mpris-blurred
 
 if [ $# -eq 0 ]; then
     echo "Usage: $0 --title | --arturl | --artist | --position | --length | --album | --source"
@@ -87,7 +85,7 @@ case "$1" in
 #     fetch_thumb & # Run fetch_thumb in the background
 #     url=$(get_metadata "mpris:artUrl")
 #     if [[ "$(playerctl -p status)" != "Playing"  ]]; then
-#           rm -f /tmp/rhp-mpris*
+#           rm -f /tmp/hyde-mpris*
 #     fi
 #      ;;
 --artist)

@@ -16,11 +16,29 @@ Item {
     property int todoListItemPadding: 8
     property int listBottomPadding: 80
 
+    property alias currentIndex: listView.currentIndex
+    property alias count: listView.count
+
+    onFocusChanged: {
+        if (activeFocus) listView.forceActiveFocus();
+    }
+
+    function incrementCurrentIndex() {
+        if (listView.currentIndex < listView.count - 1)
+            listView.currentIndex++;
+    }
+
+    function decrementCurrentIndex() {
+        if (listView.currentIndex > 0)
+            listView.currentIndex--;
+    }
+
     StyledListView {
         id: listView
         anchors.fill: parent
         spacing: root.todoListItemSpacing
         animateAppearance: false
+        highlightMoveDuration: Appearance.animation.elementMoveFast.duration
         model: ScriptModel {
             values: root.taskList
         }
@@ -34,6 +52,7 @@ Item {
             implicitHeight: todoItemRectangle.implicitHeight
             width: ListView.view.width
             clip: true
+
 
             Behavior on implicitHeight {
                 enabled: enableHeightAnimation
@@ -50,7 +69,7 @@ Item {
                 anchors.right: parent.right
                 anchors.bottom: parent.bottom
                 implicitHeight: todoContentRowLayout.implicitHeight
-                color: Appearance.colors.colLayer2
+                color: ListView.isCurrentItem ? Appearance.colors.colLayer3 : Appearance.colors.colLayer2
                 radius: Appearance.rounding.small
 
                 ColumnLayout {

@@ -243,7 +243,8 @@ if [ ${#COLLISION_DIRS[@]} -gt 0 ]; then
     done
     info "Backup saved to $BACKUP_DIR"
   else
-    warn "Skipping backup."
+    warn "Backup declined. Existing configs will NOT be overwritten."
+    BACKUP_DECLINED=true
   fi
 else
   info "No existing configs to back up."
@@ -257,16 +258,16 @@ header "Deploy Symlinks"
 deploy_symlinks() {
   info "Creating ~/.config/ symlinks..."
   mkdir -p "$HOME/.config"
-  for dir in "$CONFIG_SRC"/*/; do
-    dirname="$(basename "$dir")"
-    target="$HOME/.config/$dirname"
+  for item in "$CONFIG_SRC"/*; do
+    bn="$(basename "$item")"
+    target="$HOME/.config/$bn"
     if [ -L "$target" ]; then
       rm -f "$target"
     elif [ -e "$target" ]; then
       rm -rf "$target"
     fi
-    ln -sfn "$dir" "$target"
-    info "  ~/.config/$dirname -> $dir"
+    ln -sfn "$item" "$target"
+    info "  ~/.config/$bn -> $item"
   done
 
   info "Creating ~/.local/bin symlinks..."
@@ -281,8 +282,19 @@ deploy_symlinks() {
 }
 
 if confirm "Deploy symlinks from repo to ~/.config/ and ~/.local/bin/?"; then
+  if [ "${BACKUP_DECLINED:-false}" = "true" ]; then
+    error "Backup was declined but existing configs would be overwritten. Aborting deployment."
+    exit 1
+  fi
   deploy_symlinks
   info "Symlinks created."
+
+  # Verify RHPTheme symlink
+  if [ -L "$HOME/.config/RHPTheme" ] && [ -d "$HOME/.config/RHPTheme/Theme" ]; then
+    info "RHPTheme symlink OK — theme resources available at ~/.config/RHPTheme"
+  else
+    warn "RHPTheme symlink missing or incomplete. Hyprland and Alacritty may not theme properly."
+  fi
 else
   warn "Skipping symlink deployment."
 fi
@@ -303,7 +315,10 @@ elif [ -f "$HOME/.zshenv" ] && grep -q "ZDOTDIR" "$HOME/.zshenv" 2>/dev/null; th
   ZDOTDIR_SET=true
 else
   if confirm "Set ZDOTDIR=$HOME/.config/zsh in ~/.zshenv?"; then
-    echo 'export ZDOTDIR="$HOME/.config/zsh"' >> "$HOME/.zshenv"
+    cat > "$HOME/.zshenv" <<-ZDENV
+export ZDOTDIR="$HOME/.config/zsh"
+[ -f "\$ZDOTDIR/.zshenv" ] && source "\$ZDOTDIR/.zshenv"
+ZDENV
     info "Added ZDOTDIR to ~/.zshenv"
     ZDOTDIR_SET=true
   fi
@@ -314,8 +329,15 @@ if [ -d "$HOME/.oh-my-zsh" ]; then
   info "oh-my-zsh already installed."
 else
   if confirm "Install oh-my-zsh?"; then
-    sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)" "" --unattended || true
-    info "oh-my-zsh installed."
+    set +e
+    sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)" "" --unattended
+    omz_status=$?
+    set -e
+    if [ $omz_status -eq 0 ]; then
+      info "oh-my-zsh installed."
+    else
+      error "oh-my-zsh installation failed (exit code $omz_status)."
+    fi
   fi
 fi
 
@@ -326,22 +348,16 @@ else
   if confirm "Create a basic ~/.gitconfig?"; then
     read -r -p "  Git user name: " git_name
     read -r -p "  Git email: " git_email
-    cat > "$HOME/.gitconfig" <<-EOF
-[user]
-	name = $git_name
-	email = $git_email
-[core]
-	editor = nvim
-EOF
+    git config --global user.name "$git_name"
+    git config --global user.email "$git_email"
+    git config --global core.editor nvim
     info "~/.gitconfig created."
   fi
 fi
 
 # Enable systemd user services
-if confirm "Enable Hyprland systemd user services (hyprpolkitagent, ydotool)?"; then
+if confirm "Enable Hyprland systemd user services?"; then
   systemctl --user enable hyprpolkitagent.service 2>/dev/null || true
-  systemctl --user enable rhp-battery-monitor.timer 2>/dev/null || true
-  systemctl --user enable ydotool.service 2>/dev/null || true
   info "Services enabled."
 fi
 

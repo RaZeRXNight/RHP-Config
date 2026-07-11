@@ -1,7 +1,10 @@
-general.import = [ "~/.config/RHPTheme/Theme/alacritty.toml" ]
+general.import = ["~/.config/RHPTheme/Theme/alacritty.toml"]
 
 [env]
 TERM = "xterm-256color"
+
+[selection]
+save_to_clipboard = true
 
 [terminal]
 osc52 = "CopyPaste"
@@ -19,7 +22,7 @@ decorations = "None"
 
 [keyboard]
 bindings = [
-{ key = "Insert", mods = "Shift", action = "Paste" },
-{ key = "Insert", mods = "Control", action = "Copy" },
-{ key = "Return", mods = "Shift", chars = "\u001B\r" }
+  { key = "Insert", mods = "Shift", action = "Paste" },
+  { key = "Insert", mods = "Control", action = "Copy" },
+  { key = "Return", mods = "Shift", chars = "\u001B\r" },
 ]

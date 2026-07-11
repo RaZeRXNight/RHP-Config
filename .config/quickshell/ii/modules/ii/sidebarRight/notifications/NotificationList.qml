@@ -8,6 +8,69 @@ import QtQuick.Layouts
 
 Item {
     id: root
+    property int currentGroupIndex: 0
+
+    function getGroupCount() {
+        return Notifications.appNameList.length;
+    }
+
+    function autoExpandCurrent() {
+        var group = listview.itemAtIndex(currentGroupIndex);
+        if (group) group.expanded = true;
+    }
+
+    function dismissCurrent() {
+        var group = listview.itemAtIndex(currentGroupIndex);
+        if (group) group.destroyWithAnimation();
+        var count = getGroupCount();
+        if (count > 0) {
+            currentGroupIndex = Math.min(currentGroupIndex, count - 1);
+        } else {
+            currentGroupIndex = 0;
+        }
+    }
+
+    function ensureCurrentVisible() {
+        listview.positionViewAtIndex(currentGroupIndex, ListView.Contain);
+    }
+
+    Keys.onPressed: (event) => {
+        var count = getGroupCount();
+        if (count === 0) {
+            if (event.key === Qt.Key_H || event.key === Qt.Key_L ||
+                event.key === Qt.Key_Left || event.key === Qt.Key_Right ||
+                event.key === Qt.Key_Return || event.key === Qt.Key_Enter || event.key === Qt.Key_Space) {
+                event.accepted = true;
+            }
+            else if ((event.key === Qt.Key_J || event.key === Qt.Key_K ||
+                      event.key === Qt.Key_Down || event.key === Qt.Key_Up) &&
+                     !(event.modifiers & Qt.ShiftModifier)) {
+                event.accepted = true;
+            }
+            return;
+        }
+
+        if ((event.key === Qt.Key_J || event.key === Qt.Key_Down) && !(event.modifiers & Qt.ShiftModifier)) {
+            currentGroupIndex = Math.min(currentGroupIndex + 1, count - 1);
+            ensureCurrentVisible();
+            autoExpandCurrent();
+            event.accepted = true;
+        }
+        else if ((event.key === Qt.Key_K || event.key === Qt.Key_Up) && !(event.modifiers & Qt.ShiftModifier)) {
+            currentGroupIndex = Math.max(currentGroupIndex - 1, 0);
+            ensureCurrentVisible();
+            autoExpandCurrent();
+            event.accepted = true;
+        }
+        else if (event.key === Qt.Key_H || event.key === Qt.Key_L ||
+                 event.key === Qt.Key_Left || event.key === Qt.Key_Right) {
+            event.accepted = true;
+        }
+        else if (event.key === Qt.Key_Return || event.key === Qt.Key_Enter || event.key === Qt.Key_Space) {
+            dismissCurrent();
+            event.accepted = true;
+        }
+    }
 
     NotificationListView { // Scrollable window
         id: listview

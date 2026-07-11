@@ -13,12 +13,14 @@ read_colors() {
         FG=$(jq -r '.fg // ""' "$AETHER_JSON")
     fi
 
-    if [ -z "$PALETTE" ]; then
-        JSON=$(aether status --json 2>/dev/null || echo '{"palette":["#141313","#ffb4ab","#B5CCBA","#df6124","#cbc4cb","#cac5c8","#d1c3c6","#e6e1e1","#3a3939","#ffb4ab","#B5CCBA","#df6124","#cbc4cb","#cac5c8","#d1c3c6","#e6e1e1"]}')
-        PALETTE=$(echo "$JSON" | jq -r '.palette | join("|")')
-        ACCENT="${ACCENT:-$(echo "$JSON" | jq -r '.palette[4] // "#cbc4cb"')}"
-        BG="${BG:-$(echo "$JSON" | jq -r '.palette[0] // "#141313"')}"
-        FG="${FG:-$(echo "$JSON" | jq -r '.palette[7] // "#e6e1e1"')}"
+    if [ -z "$PALETTE" ] && [ -n "${1-}" ]; then
+        BLUEPRINT_FILE="$HOME/.config/aether/blueprints/${1}.json"
+        if [ -f "$BLUEPRINT_FILE" ]; then
+            PALETTE=$(jq -r '.palette.colors | join("|")' "$BLUEPRINT_FILE")
+            ACCENT=$(jq -r '.palette.extendedColors.accent // .palette.colors[4]' "$BLUEPRINT_FILE")
+            BG=$(jq -r '.palette.colors[0]' "$BLUEPRINT_FILE")
+            FG=$(jq -r '.palette.colors[7]' "$BLUEPRINT_FILE")
+        fi
     fi
 
     IFS='|' read -ra P <<< "$PALETTE"
@@ -55,9 +57,12 @@ darken() {
     printf "#%02x%02x%02x" "$r" "$g" "$b"
 }
 
-read_colors
+read_colors "$@"
 
-LIGHT_MODE=$(aether status --json 2>/dev/null | jq -r '.light_mode // false')
+# Determine light/dark mode from background color brightness
+r=$((16#${BG:1:2})); g=$((16#${BG:3:2})); b=$((16#${BG:5:2}))
+brightness=$(( (r * 299 + g * 587 + b * 114) / 1000 ))
+[ $brightness -gt 128 ] && LIGHT_MODE="true" || LIGHT_MODE="false"
 if [ "$LIGHT_MODE" = "true" ]; then
     SURFACE_DIM="$P8"
     SURFACE_BRIGHT="$P0"

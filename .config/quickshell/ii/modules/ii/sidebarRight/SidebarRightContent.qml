@@ -28,11 +28,64 @@ Item {
     property bool showNightLightDialog: false
     property bool showWifiDialog: false
     property bool editMode: false
+    property int focusedSectionIndex: 0
+    property var sections: [buttonRow, slidersLoader, classicPanel, androidPanel, centerGroup]
+
+    function _focusItem(item) {
+        if (item && item.item) {
+            item.item.forceActiveFocus();
+        } else if (item) {
+            item.forceActiveFocus();
+        }
+    }
+
+    function focusNextSection() {
+        var len = root.sections.length;
+        for (var i = 1; i <= len; i++) {
+            var idx = (root.focusedSectionIndex + i) % len;
+            var s = root.sections[idx];
+            if (s.visible) {
+                root.focusedSectionIndex = idx;
+                root._focusItem(s);
+                return;
+            }
+        }
+    }
+
+    function focusPrevSection() {
+        var len = root.sections.length;
+        for (var i = 1; i <= len; i++) {
+            var idx = (root.focusedSectionIndex - i + len) % len;
+            var s = root.sections[idx];
+            if (s.visible) {
+                root.focusedSectionIndex = idx;
+                root._focusItem(s);
+                return;
+            }
+        }
+    }
+
+    function focusActiveItem() {
+        centerGroup.forceActiveFocus();
+    }
+
+    Keys.onPressed: (event) => {
+        if ((event.key === Qt.Key_J) && (event.modifiers & Qt.ShiftModifier)) {
+            root.focusNextSection();
+            event.accepted = true;
+        }
+        else if ((event.key === Qt.Key_K) && (event.modifiers & Qt.ShiftModifier)) {
+            root.focusPrevSection();
+            event.accepted = true;
+        }
+    }
 
     Connections {
         target: GlobalStates
         function onSidebarRightOpenChanged() {
-            if (!GlobalStates.sidebarRightOpen) {
+            if (GlobalStates.sidebarRightOpen) {
+                Qt.callLater(root.focusActiveItem);
+            } else {
                 root.showWifiDialog = false;
                 root.showBluetoothDialog = false;
                 root.showAudioOutputDialog = false;
@@ -64,6 +117,7 @@ Item {
             spacing: sidebarPadding
 
             SystemButtonRow {
+                id: buttonRow
                 Layout.fillHeight: false
                 Layout.fillWidth: true
                 // Layout.margins: 10
@@ -85,11 +139,13 @@ Item {
             }
 
             LoaderedQuickPanelImplementation {
+                id: classicPanel
                 styleName: "classic"
                 sourceComponent: ClassicQuickPanel {}
             }
 
             LoaderedQuickPanelImplementation {
+                id: androidPanel
                 styleName: "android"
                 sourceComponent: AndroidQuickPanel {
                     editMode: root.editMode
@@ -97,17 +153,13 @@ Item {
             }
 
             CenterWidgetGroup {
+                id: centerGroup
                 Layout.alignment: Qt.AlignHCenter
                 Layout.fillHeight: true
                 Layout.fillWidth: true
             }
 
-            BottomWidgetGroup {
-                Layout.alignment: Qt.AlignHCenter
-                Layout.fillHeight: false
-                Layout.fillWidth: true
-                Layout.preferredHeight: implicitHeight
-            }
+
         }
     }
 
@@ -209,6 +261,36 @@ Item {
 
     component SystemButtonRow: Item {
         implicitHeight: Math.max(uptimeContainer.implicitHeight, systemButtonsRow.implicitHeight)
+        property int buttonFocusIndex: 0
+
+        function focusButtonByOffset(delta) {
+            var buttons = [];
+            for (var i = 0; i < systemButtonsRow.children.length; i++) {
+                var child = systemButtonsRow.children[i];
+                if (child.visible && "clicked" in child) {
+                    buttons.push(child);
+                }
+            }
+            if (buttons.length === 0) return;
+            buttonFocusIndex = Math.max(0, Math.min(buttonFocusIndex + delta, buttons.length - 1));
+            buttons[buttonFocusIndex].forceActiveFocus();
+        }
+
+        Keys.onPressed: (event) => {
+            if ((event.key === Qt.Key_H || event.key === Qt.Key_Left) && !(event.modifiers & Qt.ShiftModifier)) {
+                focusButtonByOffset(-1);
+                event.accepted = true;
+            }
+            else if ((event.key === Qt.Key_L || event.key === Qt.Key_Right) && !(event.modifiers & Qt.ShiftModifier)) {
+                focusButtonByOffset(1);
+                event.accepted = true;
+            }
+            else if ((event.key === Qt.Key_J || event.key === Qt.Key_K ||
+                      event.key === Qt.Key_Down || event.key === Qt.Key_Up) &&
+                     !(event.modifiers & Qt.ShiftModifier)) {
+                event.accepted = true;
+            }
+        }
 
         Rectangle {
             id: uptimeContainer

@@ -15,6 +15,75 @@ Rectangle {
     property var screen: root.QsWindow.window?.screen
     property var brightnessMonitor: Brightness.getMonitorForScreen(screen)
 
+    property int focusIndex: 0
+    property bool captured: false
+
+    function getSliders() {
+        var sliders = [];
+        for (var i = 0; i < contentItem.children.length; i++) {
+            var child = contentItem.children[i];
+            if (child.visible && child.item) {
+                sliders.push(child.item);
+            }
+        }
+        return sliders;
+    }
+
+    function focusSlider(index) {
+        var sliders = getSliders();
+        if (index >= 0 && index < sliders.length) {
+            focusIndex = index;
+            sliders[index].forceActiveFocus();
+        }
+    }
+
+    Keys.onPressed: (event) => {
+        var sliders = getSliders();
+        if (sliders.length === 0) {
+            event.accepted = true;
+            return;
+        }
+
+        if (root.captured) {
+            var slider = sliders[focusIndex];
+            if (event.key === Qt.Key_H || event.key === Qt.Key_Left || event.key === Qt.Key_J || event.key === Qt.Key_Down) {
+                if (!(event.modifiers & Qt.ShiftModifier)) {
+                    slider.value = Math.max(slider.from, slider.value - slider.stepSize);
+                    event.accepted = true;
+                }
+            }
+            else if (event.key === Qt.Key_L || event.key === Qt.Key_Right || event.key === Qt.Key_K || event.key === Qt.Key_Up) {
+                if (!(event.modifiers & Qt.ShiftModifier)) {
+                    slider.value = Math.min(slider.to, slider.value + slider.stepSize);
+                    event.accepted = true;
+                }
+            }
+            else if (event.key === Qt.Key_Return || event.key === Qt.Key_Enter || event.key === Qt.Key_Space) {
+                root.captured = false;
+                event.accepted = true;
+            }
+        } else {
+            if ((event.key === Qt.Key_J || event.key === Qt.Key_Down) && !(event.modifiers & Qt.ShiftModifier)) {
+                focusSlider(Math.min(focusIndex + 1, sliders.length - 1));
+                event.accepted = true;
+            }
+            else if ((event.key === Qt.Key_K || event.key === Qt.Key_Up) && !(event.modifiers & Qt.ShiftModifier)) {
+                focusSlider(Math.max(focusIndex - 1, 0));
+                event.accepted = true;
+            }
+            else if (event.key === Qt.Key_H || event.key === Qt.Key_Left || event.key === Qt.Key_L || event.key === Qt.Key_Right) {
+                event.accepted = true;
+            }
+            else if (event.key === Qt.Key_Return || event.key === Qt.Key_Enter || event.key === Qt.Key_Space) {
+                if (sliders[focusIndex]) {
+                    root.captured = true;
+                    sliders[focusIndex].forceActiveFocus();
+                }
+                event.accepted = true;
+            }
+        }
+    }
+
     implicitWidth: contentItem.implicitWidth + root.horizontalPadding * 2
     implicitHeight: contentItem.implicitHeight + root.verticalPadding * 2
     radius: Appearance.rounding.normal

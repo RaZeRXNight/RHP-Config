@@ -1,1 +1,1 @@
-/home/razer/.config/aether/theme/neovim.lua
+../../aether/theme/neovim.lua

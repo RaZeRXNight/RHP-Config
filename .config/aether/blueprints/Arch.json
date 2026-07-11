@@ -2,28 +2,29 @@
   "name": "Arch",
   "palette": {
     "colors": [
-      "#1e1e2e",
-      "#f38ba8",
-      "#a6e3a1",
-      "#f9e2af",
-      "#89b4fa",
-      "#cba6f7",
-      "#94e2d5",
-      "#cdd6f4",
-      "#45475a",
-      "#f38ba8",
-      "#a6e3a1",
-      "#f9e2af",
-      "#89b4fa",
-      "#cba6f7",
-      "#94e2d5",
-      "#ffffff"
+      "#16161E",
+      "#a37377",
+      "#608d74",
+      "#708b67",
+      "#7c89b0",
+      "#a588ab",
+      "#70a8b1",
+      "#FFFFFF",
+      "#64646a",
+      "#cd959a",
+      "#7fb493",
+      "#799d6c",
+      "#8698cc",
+      "#ba93c2",
+      "#6bbbc7",
+      "#f8f8ff"
     ],
+    "wallpaper": "/home/razer/.local/share/aether/wallpapers/wallhaven-yqq8rk.png",
     "extendedColors": {
-      "accent": "#89b4fa",
-      "cursor": "#cdd6f4",
-      "selection_background": "#cdd6f4",
-      "selection_foreground": "#1e1e2e"
+      "accent": "#7c89b0",
+      "cursor": "#FFFFFF",
+      "selection_background": "#FFFFFF",
+      "selection_foreground": "#16161E"
     }
   },
   "adjustments": {
@@ -41,5 +42,5 @@
     "whitePoint": 0
   },
   "settings": {},
-  "timestamp": 1779655461824
+  "timestamp": 1781929992050
 }

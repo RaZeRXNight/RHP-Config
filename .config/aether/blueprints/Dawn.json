@@ -1,0 +1,46 @@
+{
+  "name": "Dawn",
+  "palette": {
+    "colors": [
+      "#0b020f",
+      "#CB5C4E",
+      "#DB624D",
+      "#E8674C",
+      "#73789b",
+      "#867488",
+      "#72779a",
+      "#F6714D",
+      "#6b676d",
+      "#fb7c69",
+      "#ff8367",
+      "#ff8864",
+      "#979bc8",
+      "#ac97b0",
+      "#969ac7",
+      "#ff9263"
+    ],
+    "wallpaper": "/home/razer/.local/share/aether/wallpapers/wallhaven-d8wr7j.jpg",
+    "extendedColors": {
+      "accent": "#73789b",
+      "cursor": "#F6714D",
+      "selection_background": "#F6714D",
+      "selection_foreground": "#0b020f"
+    }
+  },
+  "adjustments": {
+    "blackPoint": 0,
+    "brightness": 0,
+    "contrast": 0,
+    "gamma": 1,
+    "highlights": 0,
+    "hueShift": 0,
+    "saturation": 0,
+    "shadows": 0,
+    "temperature": 0,
+    "tint": 0,
+    "vibrance": 0,
+    "whitePoint": 0
+  },
+  "settings": {},
+  "timestamp": 1780951357725
+}

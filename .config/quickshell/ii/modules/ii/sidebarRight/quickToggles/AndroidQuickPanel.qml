@@ -11,6 +11,97 @@ import qs.modules.ii.sidebarRight.quickToggles.androidStyle
 AbstractQuickPanel {
     id: root
     property bool editMode: false
+    property int focusRow: 0
+    property int focusCol: 0
+
+    function getAllButtons() {
+        var buttons = [];
+        for (var r = 0; r < usedRowsRepeater.count; r++) {
+            var rowItem = usedRowsRepeater.itemAtIndex(r);
+            if (!rowItem) continue;
+            var rowButtons = [];
+            for (var c = 0; c < rowItem.children.length; c++) {
+                var child = rowItem.children[c];
+                if (child.visible && "clicked" in child) {
+                    rowButtons.push(child);
+                }
+            }
+            buttons.push(rowButtons);
+        }
+        return buttons;
+    }
+
+    function clampFocus() {
+        var buttons = getAllButtons();
+        if (buttons.length === 0) {
+            focusRow = 0;
+            focusCol = 0;
+            return;
+        }
+        focusRow = Math.max(0, Math.min(focusRow, buttons.length - 1));
+        focusCol = 0;
+    }
+
+    function focusCurrent() {
+        var buttons = getAllButtons();
+        if (buttons.length === 0) return;
+        focusRow = Math.max(0, Math.min(focusRow, buttons.length - 1));
+        if (buttons[focusRow].length === 0) return;
+        focusCol = Math.max(0, Math.min(focusCol, buttons[focusRow].length - 1));
+        buttons[focusRow][focusCol].forceActiveFocus();
+    }
+
+    Keys.onPressed: (event) => {
+        var buttons = getAllButtons();
+        if (buttons.length === 0 || buttons[0].length === 0) {
+            if (event.key === Qt.Key_Return || event.key === Qt.Key_Enter ||
+                event.key === Qt.Key_Space || event.key === Qt.Key_H || event.key === Qt.Key_L ||
+                event.key === Qt.Key_Left || event.key === Qt.Key_Right) {
+                event.accepted = true;
+            }
+            else if ((event.key === Qt.Key_J || event.key === Qt.Key_K ||
+                      event.key === Qt.Key_Down || event.key === Qt.Key_Up) &&
+                     !(event.modifiers & Qt.ShiftModifier)) {
+                event.accepted = true;
+            }
+            return;
+        }
+
+        if (event.key === Qt.Key_H || event.key === Qt.Key_Left) {
+            if (buttons[focusRow] && focusCol > 0) {
+                focusCol--;
+            }
+            focusCurrent();
+            event.accepted = true;
+        }
+        else if (event.key === Qt.Key_L || event.key === Qt.Key_Right) {
+            if (buttons[focusRow] && focusCol < buttons[focusRow].length - 1) {
+                focusCol++;
+            }
+            focusCurrent();
+            event.accepted = true;
+        }
+        else if ((event.key === Qt.Key_K || event.key === Qt.Key_Up) && !(event.modifiers & Qt.ShiftModifier)) {
+            if (focusRow > 0) {
+                focusRow--;
+                focusCol = Math.min(focusCol, buttons[focusRow].length - 1);
+            }
+            focusCurrent();
+            event.accepted = true;
+        }
+        else if ((event.key === Qt.Key_J || event.key === Qt.Key_Down) && !(event.modifiers & Qt.ShiftModifier)) {
+            if (focusRow < buttons.length - 1) {
+                focusRow++;
+                focusCol = Math.min(focusCol, buttons[focusRow].length - 1);
+            }
+            focusCurrent();
+            event.accepted = true;
+        }
+        else if (event.key === Qt.Key_Return || event.key === Qt.Key_Enter || event.key === Qt.Key_Space) {
+            event.accepted = true;
+        }
+    }
+
     Layout.fillWidth: true
 
     // Sizes

@@ -25,11 +25,7 @@ ShellRoot {
     Component.onCompleted: {
         MaterialThemeLoader.reapplyTheme()
         Hyprsunset.load()
-        FirstRunExperience.load()
-        ConflictKiller.load()
         Cliphist.refresh()
-        Wallpapers.load()
-        Updates.load()
     }
 
 
@@ -42,7 +38,7 @@ ShellRoot {
     
     PanelFamilyLoader {
         identifier: "ii"
-        component: IllogicalImpulseFamily {}
+        component: MinimalFamily {}
     }
 }
 

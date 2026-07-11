@@ -2,7 +2,7 @@
   "excludedApps": {},
   "includeGtk": false,
   "includeNeovim": true,
-  "includeVscode": false,
+  "includeVscode": true,
   "includeZed": true,
   "selectedNeovimConfig": "",
   "videoCpuMode": false

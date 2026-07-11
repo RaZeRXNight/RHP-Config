@@ -14,16 +14,32 @@ Item {
     property int fabMargins: 14
 
     Keys.onPressed: (event) => {
-        if ((event.key === Qt.Key_PageDown || event.key === Qt.Key_PageUp) && event.modifiers === Qt.NoModifier) {
-            if (event.key === Qt.Key_PageDown) {
-                tabBar.incrementCurrentIndex();
-            } else if (event.key === Qt.Key_PageUp) {
+        if (event.modifiers === Qt.NoModifier) {
+            if (event.key === Qt.Key_Left || event.key === Qt.Key_H || event.key === Qt.Key_PageUp) {
                 tabBar.decrementCurrentIndex();
+                event.accepted = true;
             }
-            event.accepted = true;
+            else if (event.key === Qt.Key_Right || event.key === Qt.Key_L || event.key === Qt.Key_PageDown) {
+                tabBar.incrementCurrentIndex();
+                event.accepted = true;
+            }
+            else if (event.key === Qt.Key_J) {
+                var list = swipeView.currentItem;
+                if (list && list.incrementCurrentIndex) {
+                    list.incrementCurrentIndex();
+                    event.accepted = true;
+                }
+            }
+            else if (event.key === Qt.Key_K) {
+                var list = swipeView.currentItem;
+                if (list && list.decrementCurrentIndex) {
+                    list.decrementCurrentIndex();
+                    event.accepted = true;
+                }
+            }
         }
         // Open add dialog on "N" (any modifiers)
-        else if (event.key === Qt.Key_N) {
+        if (event.key === Qt.Key_N) {
             root.showAddDialog = true
             event.accepted = true;
         }
@@ -32,6 +48,11 @@ Item {
             root.showAddDialog = false
             event.accepted = true;
         }
+    }
+
+    onFocusChanged: {
+        if (activeFocus && swipeView.currentItem)
+            swipeView.currentItem.forceActiveFocus();
     }
 
     ColumnLayout {

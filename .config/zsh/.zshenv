@@ -3,6 +3,6 @@ for file in "${ZDOTDIR:-$HOME/.config/zsh}/conf.d/"*.zsh; do
   [ -r "$file" ] && source "$file"
 done
 
-fastfetch
+command -v fastfetch >/dev/null && fastfetch
 
-source ~/.oh-my-zsh/oh-my-zsh.sh
+[ -f ~/.oh-my-zsh/oh-my-zsh.sh ] && source ~/.oh-my-zsh/oh-my-zsh.sh

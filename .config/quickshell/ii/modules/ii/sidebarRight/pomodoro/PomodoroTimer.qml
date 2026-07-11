@@ -13,6 +13,10 @@ Item {
     implicitHeight: contentColumn.implicitHeight
     implicitWidth: contentColumn.implicitWidth
 
+    onFocusChanged: {
+        if (activeFocus) startPauseButton.forceActiveFocus();
+    }
+
     ColumnLayout {
         id: contentColumn
         anchors.fill: parent
@@ -76,6 +80,7 @@ Item {
             spacing: 10
 
             RippleButton {
+                id: startPauseButton
                 contentItem: StyledText {
                     anchors.centerIn: parent
                     horizontalAlignment: Text.AlignHCenter
@@ -91,6 +96,7 @@ Item {
             }
 
             RippleButton {
+                id: resetButton
                 implicitHeight: 35
                 implicitWidth: 90
 

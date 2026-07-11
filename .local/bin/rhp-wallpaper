@@ -1,0 +1,8 @@
+#!/bin/bash
+awww-daemon
+for i in $(seq 1 25); do
+    awww ping 2>/dev/null && break
+    sleep 0.2
+done
+WALL=$("$HOME/.local/bin/aether-wallpaper")
+[ -f "$WALL" ] && awww img "$WALL"

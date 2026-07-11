@@ -232,13 +232,13 @@ ContentPage {
             ColumnLayout {
 
                 ContentSubsectionLabel {
-                    text: Translation.tr("Weeb")
+                    text: Translation.tr("Aether")
                 }
 
                 ConfigSelectionArray {
-                    currentValue: Config.options.policies.weeb
+                    currentValue: Config.options.policies.aether
                     onSelected: newValue => {
-                        Config.options.policies.weeb = newValue;
+                        Config.options.policies.aether = newValue;
                     }
                     options: [
                         {
@@ -250,11 +250,6 @@ ContentPage {
                             displayName: Translation.tr("Yes"),
                             icon: "check",
                             value: 1
-                        },
-                        {
-                            displayName: Translation.tr("Closet"),
-                            icon: "ev_shadow",
-                            value: 2
                         }
                     ]
                 }

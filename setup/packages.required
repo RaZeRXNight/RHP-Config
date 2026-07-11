@@ -9,20 +9,16 @@ hyprlock
 hypridle
 hyprpolkitagent
 hyprsunset
-hyprshutdown
 
-# --- Status bar / Launchers / Menus ---
-rofi
-wlogout
+# --- Status bar / Shell ---
+quickshell
 
 # --- Terminal / Shell ---
 alacritty
 zsh
 starship
 fzf
-lsd
-fastfetch
-zoxide
+neovim
 
 # --- Screenshot / Capture ---
 grim
@@ -34,10 +30,9 @@ cliphist
 brightnessctl
 pamixer
 playerctl
-ydotool
 
 # --- Wallpaper / Display ---
-swaybg
+awww
 hyprpicker
 
 # --- Notifications ---
@@ -50,7 +45,6 @@ wireplumber
 
 # --- Network / Bluetooth ---
 networkmanager
-network-manager-applet
 blueman
 
 # --- Applets / Settings ---
@@ -60,14 +54,11 @@ qt6ct
 # --- Utilities ---
 jq
 curl
-imagemagick
-gum
-uwsm
 xdg-user-dirs
 xdg-utils
-pacman-contrib
-psmisc
 python
+lsd
+fastfetch
 
 # --- Fonts ---
 ttf-jetbrains-mono-nerd
@@ -77,29 +68,13 @@ noto-fonts-emoji
 # --- Applications ---
 firefox
 nautilus
-neovim
 btop
 
-# --- Media / Recording ---
+# --- Media ---
 ffmpeg
-v4l-utils
 mpv
-obs-studio
-power-profiles-daemon
-acpi
-wttrbar
 
 # --- AUR packages (installed via yay/paru) ---
-gpu-screen-recorder-git
 illogical-impulse-quickshell-git
 illogical-impulse-backlight
-illogical-impulse-bibata-modern-classic-bin
-illogical-impulse-hyprland
-illogical-impulse-microtex-git
-illogical-impulse-python
-illogical-impulse-screencapture
 aether
-# ttf-material-symbols-variable-git  # Icon font for wlogout
-# zoom                       # Video conferencing (or install from website)
-# swayosd-git                # On-screen display overlays
-# oh-my-zsh-git              # Zsh plugin framework (or install via curl)

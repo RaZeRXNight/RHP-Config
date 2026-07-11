@@ -1,9 +1,7 @@
 #!/bin/env bash
 
-# Old: /tmp/hyde-mpris
-THUMB="/tmp/rhp-mpris"
-# Old: /tmp/hyde-mpris-blurred
-THUMB_BLURRED="/tmp/rhp-mpris-blurred"
+THUMB="/tmp/hyde-mpris"
+THUMB_BLURRED="/tmp/hyde-mpris-blurred"
 ART_INFO="${THUMB}.inf"
 
 cleanup() {

@@ -7,6 +7,7 @@ import qs.modules.ii.sidebarRight.todo
 import qs.modules.ii.sidebarRight.pomodoro
 import QtQuick
 import QtQuick.Layouts
+import "../../common/SidebarKeybinds.js" as SidebarKeybinds
 
 Rectangle {
     id: root
@@ -56,15 +57,22 @@ Rectangle {
         collapseCleanFadeTimer.start();
     }
 
+    function focusActiveItem() {
+        if (tabStack.item)
+            tabStack.item.forceActiveFocus();
+    }
+
     Timer {
         id: collapseCleanFadeTimer
         interval: Appearance.animation.elementMove.duration / 2
         repeat: false
         onTriggered: {
-            if (collapsed)
+            if (collapsed) {
                 collapsedBottomWidgetGroupRow.opacity = 1;
-            else
+            } else {
                 bottomWidgetGroupRow.opacity = 1;
+                root.focusActiveItem();
+            }
         }
     }
 
@@ -75,6 +83,9 @@ Rectangle {
             } else if (event.key === Qt.Key_PageUp) {
                 root.selectedTab = Math.max(root.selectedTab - 1, 0);
             }
+            event.accepted = true;
+        }
+        else if (SidebarKeybinds.handleBottomGroupAltKey(event, root)) {
             event.accepted = true;
         }
     }
@@ -206,6 +217,7 @@ Rectangle {
                 Connections {
                     target: root
                     function onSelectedTabChanged() {
+                        Persistent.states.sidebar.bottomGroup.tab = root.selectedTab;
                         if (root.currentTab > root.previousIndex)
                             tabSwitchBehavior.animation.down = true;
                         else if (root.currentTab < root.previousIndex)
@@ -273,6 +285,7 @@ Rectangle {
         ScriptAction {
             script: {
                 root.previousIndex = root.selectedTab;
+                root.focusActiveItem();
             }
         }
     }

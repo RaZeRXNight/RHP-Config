@@ -14,31 +14,41 @@ Item {
 
     // These are keybinds for stopwatch and pomodoro
     Keys.onPressed: (event) => {
-        if ((event.key === Qt.Key_PageDown || event.key === Qt.Key_PageUp) && event.modifiers === Qt.NoModifier) { // Switch tabs
-            if (event.key === Qt.Key_PageDown) {
-                tabBar.incrementCurrentIndex();
-            } else if (event.key === Qt.Key_PageUp) {
+        if (event.modifiers === Qt.NoModifier) {
+            if (event.key === Qt.Key_Left || event.key === Qt.Key_H || event.key === Qt.Key_PageUp) {
                 tabBar.decrementCurrentIndex();
+                event.accepted = true
             }
-            event.accepted = true
-        } else if (event.key === Qt.Key_Space || event.key === Qt.Key_S) { // Pause/resume with Space or S
-            if (tabBar.currentIndex === 0) {
-                TimerService.togglePomodoro()
-            } else {
-                TimerService.toggleStopwatch()
+            else if (event.key === Qt.Key_Right || event.key === Qt.Key_L || event.key === Qt.Key_PageDown) {
+                tabBar.incrementCurrentIndex();
+                event.accepted = true
             }
-            event.accepted = true
-        } else if (event.key === Qt.Key_R) { // Reset with R
-            if (tabBar.currentIndex === 0) {
-                TimerService.resetPomodoro()
-            } else {
-                TimerService.stopwatchReset()
+            else if (event.key === Qt.Key_Space || event.key === Qt.Key_S) { // Pause/resume with Space or S
+                if (tabBar.currentIndex === 0) {
+                    TimerService.togglePomodoro()
+                } else {
+                    TimerService.toggleStopwatch()
+                }
+                event.accepted = true
             }
-            event.accepted = true
-        } else if (event.key === Qt.Key_L) { // Record lap with L
-            TimerService.stopwatchRecordLap()
-            event.accepted = true
+            else if (event.key === Qt.Key_R) { // Reset with R
+                if (tabBar.currentIndex === 0) {
+                    TimerService.resetPomodoro()
+                } else {
+                    TimerService.stopwatchReset()
+                }
+                event.accepted = true
+            }
+            else if (event.key === Qt.Key_L) { // Record lap with L
+                TimerService.stopwatchRecordLap()
+                event.accepted = true
+            }
         }
+    }
+
+    onFocusChanged: {
+        if (activeFocus && swipeView.currentItem)
+            swipeView.currentItem.forceActiveFocus();
     }
 
     ColumnLayout {

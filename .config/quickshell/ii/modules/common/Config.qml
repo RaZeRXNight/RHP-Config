@@ -82,7 +82,7 @@ Singleton {
 
             property JsonObject policies: JsonObject {
                 property int ai: 1 // 0: No | 1: Yes | 2: Local
-                property int weeb: 1 // 0: No | 1: Open | 2: Closet
+                property int aether: 1 // 0: Disabled | 1: Enabled
             }
 
             property JsonObject ai: JsonObject {

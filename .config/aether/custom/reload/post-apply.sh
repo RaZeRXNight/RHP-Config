@@ -1,12 +1,12 @@
 #!/bin/bash
 WALLPAPER=$(~/.local/bin/aether-wallpaper)
 
-killall waybar 2>/dev/null
-waybar &
+# LEGACY: waybar no longer used — quickshell/ii handles the bar
+# killall waybar 2>/dev/null
+# waybar &
 
 if [ -n "$WALLPAPER" ]; then
-    killall swaybg 2>/dev/null
-    swaybg -i "$WALLPAPER" -m fill &
+    awww img "$WALLPAPER"
     ln -sf "$WALLPAPER" ~/.config/aether/theme/backgrounds/current
 fi
 

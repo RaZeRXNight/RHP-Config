@@ -3,6 +3,12 @@
 # Add your configurations here
 export EDITOR=nvim
 
+if command -v yay >/dev/null; then
+    export aurhelper="yay"
+elif command -v paru >/dev/null; then
+    export aurhelper="paru"
+fi
+
 # Android 
 export PATH="/opt/flutter/bin:$PATH"
 export ANDROID_HOME='/opt/android-sdk'

@@ -13,12 +13,12 @@ alias lsa='lsd -a'                                             # short list
 alias ll='lsd -lha  --sort=size --group-directories-first' # long list all
 alias ld='lsd -lhD '                                       # long list dirs
 alias lt='lsd  --tree'                                     # list folder as tree
-alias un='$aurhelper -Rns'                                             # uninstall package
-alias up='$aurhelper -Syu'                                             # update system/package/aur
-alias pl='$aurhelper -Qs'                                              # list installed package
-alias pa='$aurhelper -Ss'                                              # list available package
-alias pc='$aurhelper -Sc'                                              # remove unused cache
-alias po='$aurhelper -Qtdq | $aurhelper -Rns -'                        # remove unused packages, also try > $aurhelper -Qqd | $aurhelper -Rsu --print -
+alias un='$aurhelper -Rns'
+alias up='$aurhelper -Syu'
+alias pl='$aurhelper -Qs'
+alias pa='$aurhelper -Ss'
+alias pc='$aurhelper -Sc'
+alias po='$aurhelper -Qtdq | $aurhelper -Rns -'
 alias vc='code'                                                        # gui code editor
 alias fastfetch='fastfetch '
 

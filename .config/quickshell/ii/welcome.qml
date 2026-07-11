@@ -282,7 +282,7 @@ ApplicationWindow {
                         Layout.alignment: Qt.AlignHCenter
                         RippleButtonWithIcon {
                             id: rndWallBtn
-                            visible: Config.options.policies.weeb === 1
+                            visible: Config.options.policies.aether === 1
                             Layout.alignment: Qt.AlignHCenter
                             buttonRadius: Appearance.rounding.small
                             materialIcon: "ifl"
@@ -346,12 +346,12 @@ ApplicationWindow {
                         Layout.fillWidth: true
 
                         ContentSubsection {
-                            title: "Weeb"
+                            title: "Aether"
 
                             ConfigSelectionArray {
-                                currentValue: Config.options.policies.weeb
+                                currentValue: Config.options.policies.aether
                                 onSelected: newValue => {
-                                    Config.options.policies.weeb = newValue;
+                                    Config.options.policies.aether = newValue;
                                 }
                                 options: [
                                     {
@@ -363,11 +363,6 @@ ApplicationWindow {
                                         displayName: Translation.tr("Yes"),
                                         icon: "check",
                                         value: 1
-                                    },
-                                    {
-                                        displayName: Translation.tr("Closet"),
-                                        icon: "ev_shadow",
-                                        value: 2
                                     }
                                 ]
                             }

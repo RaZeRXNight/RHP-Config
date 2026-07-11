@@ -1,0 +1,46 @@
+{
+  "name": "Geass",
+  "palette": {
+    "colors": [
+      "#000000",
+      "#996c64",
+      "#727f57",
+      "#8a8358",
+      "#8686ae",
+      "#ac86a2",
+      "#77a997",
+      "#ffaa92",
+      "#686163",
+      "#c28e84",
+      "#7f9058",
+      "#9d9257",
+      "#9493ca",
+      "#c390b6",
+      "#77bda5",
+      "#968d8c"
+    ],
+    "wallpaper": "/home/razer/.local/share/aether/wallpapers/wallhaven-x1xkm3.png",
+    "extendedColors": {
+      "accent": "#8686ae",
+      "cursor": "#ffaa92",
+      "selection_background": "#ffaa92",
+      "selection_foreground": "#000000"
+    }
+  },
+  "adjustments": {
+    "blackPoint": 0,
+    "brightness": 0,
+    "contrast": 0,
+    "gamma": 1,
+    "highlights": 0,
+    "hueShift": 0,
+    "saturation": 0,
+    "shadows": 0,
+    "temperature": 0,
+    "tint": 0,
+    "vibrance": 0,
+    "whitePoint": 0
+  },
+  "settings": {},
+  "timestamp": 1781973526394
+}

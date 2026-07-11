@@ -13,7 +13,14 @@ Rectangle {
     color: Appearance.colors.colLayer1
 
     NotificationList {
+        id: notificationList
         anchors.fill: parent
         anchors.margins: 5
+    }
+
+    onActiveFocusChanged: {
+        if (activeFocus) {
+            notificationList.forceActiveFocus();
+        }
     }
 }

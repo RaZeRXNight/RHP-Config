@@ -1,31 +1,31 @@
 # UI Colors (extended)
-accent = "#7c89b0"
-cursor = "#999999"
+accent = "#4c8396"
+cursor = "#F7F4E9"
 
 # Primary colors
-foreground = "#999999"
-background = "#010103"
+foreground = "#F7F4E9"
+background = "#060A00"
 
 # Selection colors
-selection_foreground = "#010103"
-selection_background = "#999999"
+selection_foreground = "#060A00"
+selection_background = "#F7F4E9"
 
 # Normal colors (ANSI 0-7)
-color0 = "#010103"
-color1 = "#996b6e"
-color2 = "#58846e"
-color3 = "#708b68"
-color4 = "#7c89b0"
-color5 = "#a588ab"
-color6 = "#70a8b1"
-color7 = "#999999"
+color0 = "#060A00"
+color1 = "#BC837F"
+color2 = "#77906E"
+color3 = "#B0BD90"
+color4 = "#4c8396"
+color5 = "#b66342"
+color6 = "#629AA2"
+color7 = "#F7F4E9"
 
 # Bright colors (ANSI 8-15)
-color8 = "#5a5a61"
-color9 = "#c28d91"
-color10 = "#599779"
-color11 = "#799d6d"
-color12 = "#8698cc"
-color13 = "#ba93c2"
-color14 = "#6bbbc8"
-color15 = "#a8a8af"
+color8 = "#5e605a"
+color9 = "#e7a6a1"
+color10 = "#99b78a"
+color11 = "#cadaa0"
+color12 = "#6ba8c1"
+color13 = "#e38559"
+color14 = "#81c1cb"
+color15 = "#f5ecc1"

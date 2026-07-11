@@ -1,0 +1,16 @@
+# Generated theme files
+ii/theme/AetherTheme.json
+ii/theme/colors.json
+
+# Generated config
+ii/scripts/cava/raw_output_config.txt
+
+# Python cache
+__pycache__/
+*.pyc
+
+# Editor/IDE
+.vscode/
+.idea/
+*.swp
+*.swo

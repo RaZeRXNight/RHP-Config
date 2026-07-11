@@ -1,8 +1,17 @@
 # RHP-Config
 
-My personal Hyprland dotfiles — Arch Linux, Hyprland (Wayland), zsh, Aether theming.
+Minimal Hyprland dotfiles — Arch Linux, Hyprland (Wayland), zsh, Aether theming.
 
-These configs were created by mashing up multiple dotfiles such as Omarchy, HyDE, and dots-hyprland, then stripped down to what I actually use.
+Designed for lightweight operation: Hyprland compositor, end-4 quickshell bar, Aether theme injection.
+
+## Active components
+
+- **Hyprland** — Wayland compositor (Lua config, modular)
+- **Quickshell II** — bar + launcher + workspace overview + lock screen + session screen
+- **Aether** — color palette generation injected into Quickshell, Hyprland, Neovim, VS Code, Zed
+- **awww** — animated wallpaper daemon
+- **PipeWire / WirePlumber** — audio
+- **NetworkManager** — networking
 
 ## Directory Structure
 
@@ -10,51 +19,63 @@ These configs were created by mashing up multiple dotfiles such as Omarchy, HyDE
 ~/.RHP-Config/
 ├── .config/
 │   ├── hypr/               # Modular Lua-driven Hyprland config
-│   │   ├── hyprland.lua    # Entry point (sources modules)
-│   │   └── hyprland/       # keybinds, execs, general, rules, colors, services, variables, lib
-│   ├── hyprlock/           # Lock screen config + scripts
-│   ├── waybar/             # Status bar (config.jsonc + style.css)
-│   ├── rofi/               # Application launcher
-│   ├── wlogout/            # Power/logout menu
-│   ├── RHPTheme/           # Theme engine (borders, waybar scripts)
-│   ├── aether/             # Wallpapers + theme CSS
-│   ├── zsh/                # Shell config (aliases, path, prompt, functions)
+│   ├── hyprlock/           # Lock screen config + layouts
+│   ├── quickshell/         # Quickshell II with MinimalFamily
+│   ├── aether/             # Theme engine + color templates
+│   ├── RHPTheme/           # External theme provider (hyprland + alacritty colors)
+│   ├── zsh/                # Shell config
 │   ├── alacritty/          # Terminal
-│   ├── nvim/               # Editor
+│   ├── nvim/               # Neovim (LazyVim)
 │   ├── btop/               # System monitor
-│   ├── systemd/            # User services (waybar, polkit, etc.)
-│   ├── gtk-3.0/            # GTK theme settings
-│   ├── starship.toml       # Prompt theme
-│   └── QtProject.conf      # Qt theme settings
+│   └── starship.toml       # Prompt theme
 └── .local/
     └── bin/                # Utility scripts (volume, brightness, screenshots, etc.)
 ```
 
 ## Keybindings
 
-| Key                | Action                                     |
-| ------------------ | ------------------------------------------ |
-| `SUPER + Return`   | Terminal                                   |
-| `SUPER + Space`    | Launcher (rofi)                            |
-| `SUPER + W`        | Close window                               |
-| `SUPER + Print`    | Smart screenshot                           |
-| `SUPER + L`        | Lock screen                                |
-| `SUPER + .`        | Emoji picker                               |
-| `SUPER + ALT + C`  | Calculator                                 |
-| `SUPER + CTRL + N` | Toggle night mode (hyprsunset)             |
-| `SUPER + /`        | Keybind hints                              |
-| `F2` / `F3`        | Brightness down/up (progress notification) |
-| `F5`               | Toggle mute (progress notification)        |
-| `F6` / `F7`        | Volume down/up (progress notification)     |
+| Key | Action |
+|---|---|
+| `SUPER + Return` | Terminal |
+| `SUPER + Space` | Launcher / overview |
+| `SUPER + TAB` | Workspace overview |
+| `SUPER + Escape` | Session / power menu |
+| `SUPER + L` | Lock screen |
+| `SUPER + V` | Clipboard in overview |
+| `SUPER + .` | Emoji picker |
+| `SUPER + W` | Close window |
+| `SUPER + CTRL + N` | Toggle night mode (hyprsunset) |
+| `SUPER + CTRL + B` | Toggle bar visibility |
+| `SUPER + CTRL + D` | Toggle dark/light mode |
+| `F2` / `F3` | Brightness down/up |
+| `F5` | Toggle mute |
+| `F6` / `F7` | Volume down/up |
+| `F8` | Toggle mic mute |
+| `F9`-`F11` | Media control |
+| `Print` | Full screenshot |
+| `SUPER + Print` | Smart screenshot |
+| `SUPER + ALT + Print` | Region screenshot |
+| `SUPER + SHIFT + R` | Start screen recording |
 
 ## Dependencies
 
 ### Packages (Arch Linux)
 
-- `hyprland waybar rofi wlogout hyprlock grim slurp wl-clipboard jq`
-- `cliphist brightnessctl pamixer playerctl wf-recorder hyprsunset`
-- `swaybg swayosd networkmanager blueman pavucontrol dunst hypridle`
-- `alacritty neovim btop starship oh-my-zsh fzf lsd fastfetch curl imagemagick`
+- `hyprland hyprlock hypridle hyprpolkitagent hyprsunset`
+- `illogical-impulse-quickshell-git`
+- `alacritty zsh starship fzf neovim`
+- `grim slurp wl-clipboard cliphist`
+- `brightnessctl pamixer playerctl`
+- `awww hyprpicker`
+- `swaync`
+- `pipewire pipewire-pulse wireplumber`
+- `networkmanager blueman`
+- `pavucontrol qt6ct`
+- `jq curl python xdg-user-dirs xdg-utils`
+- `firefox nautilus btop`
+- `ffmpeg mpv`
+- `illogical-impulse-backlight`
+- `aether`
 
 ### Scripts
 
@@ -83,10 +104,10 @@ The installer walks through:
 
 ## Credits
 
+- [end-4/illogical-impulse](https://github.com/end-4/illogical-impulse) — Quickshell shell
 - [dots-hyprland](https://github.com/sh1zicus/dots-hyprland) — base Lua config structure
-- [Omarchy](https://github.com/basecamp/omarchy) — utility scripts
-- [HyDE-Project](https://github.com/HyDE-Project/HyDE) — utility concepts
-- [Aether/RHPTheme](https://github.com/rubiin/aether) — theming engine
+- [Omarchy](https://github.com/basecamp/omarchy) — utility script inspiration
+- [Aether](https://github.com/rubiin/aether) — theming engine
 
 ## License
 

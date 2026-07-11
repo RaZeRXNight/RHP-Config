@@ -1,0 +1,46 @@
+{
+  "name": "Cyberpunk",
+  "palette": {
+    "colors": [
+      "#000010",
+      "#e03d37",
+      "#F4E800",
+      "#EFE100",
+      "#577fa0",
+      "#a7647a",
+      "#66869C",
+      "#FDFC00",
+      "#5a5d63",
+      "#ff5d52",
+      "#fff400",
+      "#fff100",
+      "#77a3ce",
+      "#d384a0",
+      "#87abc7",
+      "#f9f800"
+    ],
+    "wallpaper": "/home/razer/.local/share/aether/wallpapers/wallhaven-8g93gy.png",
+    "extendedColors": {
+      "accent": "#577fa0",
+      "cursor": "#FDFC00",
+      "selection_background": "#FDFC00",
+      "selection_foreground": "#000010"
+    }
+  },
+  "adjustments": {
+    "blackPoint": 0,
+    "brightness": 0,
+    "contrast": 0,
+    "gamma": 1,
+    "highlights": 0,
+    "hueShift": 0,
+    "saturation": 0,
+    "shadows": 0,
+    "temperature": 0,
+    "tint": 0,
+    "vibrance": 0,
+    "whitePoint": 0
+  },
+  "settings": {},
+  "timestamp": 1782522070171
+}

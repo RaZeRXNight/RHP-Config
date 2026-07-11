@@ -15,15 +15,20 @@ Item {
     implicitHeight: calendarColumn.height + 10 * 2
 
     Keys.onPressed: (event) => {
-        if ((event.key === Qt.Key_PageDown || event.key === Qt.Key_PageUp)
-            && event.modifiers === Qt.NoModifier) {
-            if (event.key === Qt.Key_PageDown) {
-                monthShift++;
-            } else if (event.key === Qt.Key_PageUp) {
+        if (event.modifiers === Qt.NoModifier) {
+            if (event.key === Qt.Key_Left || event.key === Qt.Key_H || event.key === Qt.Key_PageUp) {
                 monthShift--;
+                event.accepted = true;
             }
-            event.accepted = true;
+            else if (event.key === Qt.Key_Right || event.key === Qt.Key_L || event.key === Qt.Key_PageDown) {
+                monthShift++;
+                event.accepted = true;
+            }
         }
+    }
+
+    onFocusChanged: {
+        if (activeFocus) forceActiveFocus();
     }
     MouseArea {
         anchors.fill: parent

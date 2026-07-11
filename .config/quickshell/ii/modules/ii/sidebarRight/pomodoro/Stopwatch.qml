@@ -12,6 +12,10 @@ Item {
     Layout.fillWidth: true
     Layout.fillHeight: true
 
+    onFocusChanged: {
+        if (activeFocus) startPauseButton.forceActiveFocus();
+    }
+
     Item {
         anchors {
             fill: parent
@@ -160,6 +164,7 @@ Item {
             spacing: 4
 
             RippleButton {
+                id: startPauseButton
                 Layout.preferredHeight: 35
                 Layout.preferredWidth: 90
                 font.pixelSize: Appearance.font.pixelSize.larger
@@ -180,6 +185,7 @@ Item {
             }
 
             RippleButton {
+                id: lapResetButton
                 implicitHeight: 35
                 implicitWidth: 90
                 font.pixelSize: Appearance.font.pixelSize.larger
