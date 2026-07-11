@@ -1,13 +1,57 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 # rhp:summary=Launch a URL as a web app in the default supported browser
 # rhp:args=<url>
 
-browser=$(xdg-settings get default-web-browser)
+if [[ $# -lt 1 || -z "$1" ]]; then
+  printf 'Usage: %s <url> [browser arguments...]\n' "$0" >&2
+  exit 2
+fi
+
+find_executable() {
+  local name="$1"
+  if command -v "$name" >/dev/null 2>&1; then
+    printf '%s' "$name"
+    return 0
+  fi
+  # Fallback: try common suffixed variants
+  for suffix in -stable -beta -unstable; do
+    if command -v "${name}${suffix}" >/dev/null 2>&1; then
+      printf '%s' "${name}${suffix}"
+      return 0
+    fi
+  done
+  return 1
+}
+
+browser=$(xdg-settings get default-web-browser 2>/dev/null || true)
+app_flag=""
+executable=""
 
 case $browser in
-google-chrome* | brave* | microsoft-edge* | opera* | vivaldi* | helium*) ;;
-*) browser="chromium.desktop" ;;
+  firefox*)
+    executable=$(find_executable firefox) || { printf 'Firefox is not installed.\n' >&2; exit 1; }
+    app_flag="--new-window"
+    ;;
+  google-chrome*)   executable=$(find_executable google-chrome)   ;;
+  brave*)           executable=$(find_executable brave)           ;;
+  microsoft-edge*)  executable=$(find_executable microsoft-edge)  ;;
+  opera*)           executable=$(find_executable opera)           ;;
+  vivaldi*)         executable=$(find_executable vivaldi)         ;;
+  helium*)          executable=$(find_executable helium)          ;;
+  *)
+    for candidate in chromium firefox; do
+      executable=$(find_executable "$candidate") && break
+    done
+    ;;
 esac
 
-exec setsid uwsm-app -- $(sed -n 's/^Exec=\([^ ]*\).*/\1/p' {~/.local,~/.nix-profile,/usr}/share/applications/$browser 2>/dev/null | head -1) --app="$1" "${@:2}"
+if [[ -z "${executable:-}" ]]; then
+  printf 'No supported browser is installed.\n' >&2
+  exit 1
+fi
+
+# Default app flag for chromium-family browsers
+[[ -z "$app_flag" ]] && app_flag="--app=$1"
+
+exec setsid uwsm-app -- "$executable" $app_flag "${@:2}"

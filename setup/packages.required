@@ -1,7 +1,7 @@
 # RHP-Config Required Packages
 # Arch Linux — always installed (official packages via pacman)
 # Lines starting with # are comments. One package per line.
-# AUR packages are marked and installed via yay/paru.
+# AUR packages use the `aur:` prefix and are installed via yay/paru.
 
 # --- Core Hyprland ---
 hyprland
@@ -11,7 +11,7 @@ hyprpolkitagent
 hyprsunset
 
 # --- Status bar / Shell ---
-quickshell
+aur:illogical-impulse-quickshell-git
 
 # --- Terminal / Shell ---
 alacritty
@@ -25,6 +25,8 @@ grim
 slurp
 wl-clipboard
 cliphist
+gpu-screen-recorder
+wf-recorder
 
 # --- Hardware Control ---
 brightnessctl
@@ -37,6 +39,7 @@ hyprpicker
 
 # --- Notifications ---
 swaync
+libnotify
 
 # --- Audio ---
 pipewire
@@ -54,6 +57,10 @@ qt6ct
 # --- Utilities ---
 jq
 curl
+bc
+uwsm
+imagemagick
+v4l-utils
 xdg-user-dirs
 xdg-utils
 python
@@ -75,6 +82,5 @@ ffmpeg
 mpv
 
 # --- AUR packages (installed via yay/paru) ---
-illogical-impulse-quickshell-git
-illogical-impulse-backlight
-aether
+aur:illogical-impulse-backlight
+aur:aether

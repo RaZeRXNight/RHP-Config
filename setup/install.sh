@@ -98,8 +98,10 @@ parse_packages() {
     line="${line## }"
     line="${line%% }"
     [ -z "$line" ] && continue
-    if [[ "$line" == *-git ]] || [[ "$line" == *-bin ]]; then
-      aur_ref+=("$line")
+    if [[ "$line" == aur:* ]]; then
+      aur_ref+=("${line#aur:}")
+    elif [[ "$line" == official:* ]]; then
+      off_ref+=("${line#official:}")
     else
       off_ref+=("$line")
     fi
@@ -111,6 +113,7 @@ AUR_PKGS=()
 
 if [ -f "$REQUIRED_PACKAGES_FILE" ]; then
   parse_packages "$REQUIRED_PACKAGES_FILE" OFFICIAL_PKGS AUR_PKGS
+  REQUIRED_AUR_COUNT=${#AUR_PKGS[@]}
   info "Found ${#OFFICIAL_PKGS[@]} official and ${#AUR_PKGS[@]} AUR required packages."
 else
   warn "No required packages file found at $REQUIRED_PACKAGES_FILE. Skipping package installation."
@@ -160,15 +163,21 @@ if [ ${#AUR_PKGS[@]} -gt 0 ]; then
         info "Installing base-devel..."
         sudo pacman -S --noconfirm base-devel
       fi
-      [ -d /tmp/yay-bin ] && rm -rf /tmp/yay-bin
-      git clone https://aur.archlinux.org/yay-bin.git /tmp/yay-bin
-      (cd /tmp/yay-bin && makepkg -si --noconfirm)
+      AUR_BUILD_DIR="$(mktemp -d -t rhp-yay.XXXXXXXX)"
+      trap 'rm -rf "$AUR_BUILD_DIR"' EXIT
+      git clone https://aur.archlinux.org/yay-bin.git "$AUR_BUILD_DIR/yay-bin"
+      (cd "$AUR_BUILD_DIR/yay-bin" && makepkg -si --noconfirm)
       AUR_HELPER="yay"
       info "yay installed."
     else
       warn "Skipping AUR packages. You will need to install them manually."
     fi
   fi
+fi
+
+if [ "${REQUIRED_AUR_COUNT:-0}" -gt 0 ] && [ -z "$AUR_HELPER" ]; then
+  error "Required AUR packages cannot be installed without yay or paru."
+  exit 1
 fi
 
 # ──────────────────────────────────────────────
@@ -231,7 +240,7 @@ if [ ${#COLLISION_DIRS[@]} -gt 0 ]; then
   if confirm "Back up these configs and proceed?"; then
     mkdir -p "$BACKUP_DIR"
     for d in "${COLLISION_DIRS[@]}"; do
-      if [ -e "$HOME/.config/$d" ]; then
+      if [ -e "$HOME/.config/$d" ] && [ -d "$HOME/.config/$d" ]; then
         cp -a "$HOME/.config/$d" "$BACKUP_DIR/"
         info "Backed up ~/.config/$d"
       fi
@@ -297,7 +306,36 @@ if confirm "Deploy symlinks from repo to ~/.config/ and ~/.local/bin/?"; then
   fi
 else
   warn "Skipping symlink deployment."
+  error "Configuration was not deployed. Installation is incomplete."
+  exit 1
 fi
+
+validate_deployment() {
+  local required_path
+  for required_path in \
+    "$HOME/.config/hypr/hyprland.lua" \
+    "$HOME/.config/quickshell/ii/shell.qml" \
+    "$HOME/.config/RHPTheme/Theme/hyprland.conf" \
+    "$HOME/.local/bin/aether-wallpaper"; do
+    if [ ! -e "$required_path" ]; then
+      error "Required deployed path is missing: $required_path"
+      return 1
+    fi
+  done
+
+  for command_name in Hyprland quickshell awww jq; do
+    if ! command -v "$command_name" >/dev/null 2>&1; then
+      error "Required command is unavailable: $command_name"
+      return 1
+    fi
+  done
+}
+
+if ! validate_deployment; then
+  error "Deployment validation failed. Installation is incomplete."
+  exit 1
+fi
+info "Deployment validation passed."
 
 # ──────────────────────────────────────────────
 # Step 7: Post-install
@@ -307,14 +345,19 @@ header "Post-Install Setup"
 # ZDOTDIR
 ZDOTDIR_SET=false
 ZSHENV="/etc/zsh/zshenv"
-if [ -f "$ZSHENV" ] && grep -q "ZDOTDIR" "$ZSHENV" 2>/dev/null; then
+if [ -f "$ZSHENV" ] && grep -Eq "^[[:space:]]*export[[:space:]]+ZDOTDIR=[\"']?\$HOME/.config/zsh" "$ZSHENV" 2>/dev/null; then
   info "ZDOTDIR already configured in $ZSHENV"
   ZDOTDIR_SET=true
-elif [ -f "$HOME/.zshenv" ] && grep -q "ZDOTDIR" "$HOME/.zshenv" 2>/dev/null; then
+elif [ -f "$HOME/.zshenv" ] && grep -Eq "^[[:space:]]*export[[:space:]]+ZDOTDIR=[\"']?(${HOME}|\$HOME)/.config/zsh" "$HOME/.zshenv" 2>/dev/null; then
   info "ZDOTDIR already configured in ~/.zshenv"
   ZDOTDIR_SET=true
 else
   if confirm "Set ZDOTDIR=$HOME/.config/zsh in ~/.zshenv?"; then
+    if [ -e "$HOME/.zshenv" ]; then
+      mkdir -p "$BACKUP_DIR"
+      cp -a "$HOME/.zshenv" "$BACKUP_DIR/.zshenv"
+      info "Backed up ~/.zshenv"
+    fi
     cat > "$HOME/.zshenv" <<-ZDENV
 export ZDOTDIR="$HOME/.config/zsh"
 [ -f "\$ZDOTDIR/.zshenv" ] && source "\$ZDOTDIR/.zshenv"
@@ -329,9 +372,17 @@ if [ -d "$HOME/.oh-my-zsh" ]; then
   info "oh-my-zsh already installed."
 else
   if confirm "Install oh-my-zsh?"; then
+    OMZ_INSTALLER="$(mktemp -t rhp-ohmyzsh.XXXXXXXX)"
     set +e
-    sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)" "" --unattended
-    omz_status=$?
+    curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh -o "$OMZ_INSTALLER"
+    curl_status=$?
+    if [ $curl_status -eq 0 ]; then
+      sh "$OMZ_INSTALLER" "" --unattended
+      omz_status=$?
+    else
+      omz_status=$curl_status
+    fi
+    [ -f "$OMZ_INSTALLER" ] && rm -f "$OMZ_INSTALLER"
     set -e
     if [ $omz_status -eq 0 ]; then
       info "oh-my-zsh installed."

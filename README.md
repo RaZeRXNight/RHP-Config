@@ -74,6 +74,7 @@ Designed for lightweight operation: Hyprland compositor, end-4 quickshell bar, A
 - `jq curl python xdg-user-dirs xdg-utils`
 - `firefox nautilus btop`
 - `ffmpeg mpv`
+- `bc libnotify imagemagick v4l-utils uwsm gpu-screen-recorder wf-recorder`
 - `illogical-impulse-backlight`
 - `aether`
 
