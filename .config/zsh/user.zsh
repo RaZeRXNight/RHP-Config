@@ -14,6 +14,10 @@ if [[ $- == *i* ]]; then
     fi
 fi
 
+if uwsm check may-start && uwsm select; then 
+  exec uwsm start default
+fi
+
 #   Overrides 
 # HYDE_ZSH_NO_PLUGINS=1 # Set to 1 to disable loading of oh-my-zsh plugins, useful if you want to use your zsh plugins system 
 # unset HYDE_ZSH_PROMPT # Uncomment to unset/disable loading of prompts from HyDE and let you load your own prompts

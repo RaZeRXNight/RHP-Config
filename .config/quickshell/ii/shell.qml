@@ -38,7 +38,7 @@ ShellRoot {
     
     PanelFamilyLoader {
         identifier: "ii"
-        component: MinimalFamily {}
+        component: IllogicalImpulseFamily {}
     }
 }
 

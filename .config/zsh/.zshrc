@@ -15,3 +15,6 @@
 
 
 # unset -f command_not_found_handler # Uncomment to prevent searching for commands not found in package manager
+
+# opencode
+export PATH=/home/razer/.opencode/bin:$PATH

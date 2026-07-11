@@ -45,8 +45,8 @@ hl.bind(
 )
 hl.bind(
 	"SUPER + SHIFT + S",
-	hl.dsp.exec_cmd("rhp-launch-webapp https://aistudio.google.com"),
-	{ description = "Google Studio" }
+	hl.dsp.exec_cmd("rhp-launch-webapp https://sheets.google.com"),
+	{ description = "Google Sheets" }
 )
 hl.bind(
 	"SUPER + SHIFT + W",
@@ -68,6 +68,16 @@ hl.bind(
     "SUPER + SHIFT + E",
     hl.dsp.exec_cmd("rhp-launch-webapp https://mail.google.com/mail/u/0/"),
     { description = "Open gmail" }
+)
+hl.bind(
+    "SUPER + SHIFT + Y",
+    hl.dsp.exec_cmd("rhp-launch-webapp https://youtube.com"),
+    { description = "Open YouTube" }
+)
+hl.bind(
+    "SUPER + SHIFT + P",
+    hl.dsp.exec_cmd("rhp-launch-webapp https://photos.google.com"),
+    { description = "Open Google Photos" }
 )
 
 -- # _____________________________
@@ -233,9 +243,13 @@ hl.bind("SUPER + CTRL + N", hl.dsp.exec_cmd("hyprsunset -t"), { description = "T
 --   brightness decrement  → F2
 --   region screenshot     → SUPER + ALT + Print
 --   region record         → SUPER + SHIFT + R
+--   sidebarLeft toggle    → SUPER + B
+--   sidebarRight toggle   → SUPER + ALT + B
 
 hl.bind("SUPER + V", hl.dsp.exec_cmd("qs -c ii msg search clipboardToggle"), { description = "Clipboard in overview" })
 hl.bind("SUPER + CTRL + B", hl.dsp.exec_cmd("qs -c ii msg bar toggle"), { description = "Toggle bar visibility" })
+hl.bind("SUPER + B", hl.dsp.exec_cmd("qs -c ii msg sidebarLeft toggle"), { description = "Toggle left sidebar" })
+hl.bind("SUPER + ALT + B", hl.dsp.exec_cmd("qs -c ii msg sidebarRight toggle"), { description = "Toggle right sidebar" })
 hl.bind(
     "SUPER + CTRL + D",
     hl.dsp.exec_cmd("qs -c ii msg theme toggleLightDark"),

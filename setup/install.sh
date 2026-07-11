@@ -409,6 +409,7 @@ fi
 # Enable systemd user services
 if confirm "Enable Hyprland systemd user services?"; then
   systemctl --user enable hyprpolkitagent.service 2>/dev/null || true
+  systemctl --user enable quickshell.service 2>/dev/null || true
   info "Services enabled."
 fi
 
