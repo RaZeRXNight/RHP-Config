@@ -75,6 +75,9 @@ Singleton {
     function toggleLightDark() {
         const currentlyDark = Appearance.m3colors.darkmode
         Appearance.m3colors.darkmode = !currentlyDark
+        Quickshell.execDetached(["sh", "-c",
+            `gsettings set org.gnome.desktop.interface color-scheme '${!currentlyDark ? "prefer-dark" : "prefer-light"}'`
+        ])
     }
 
     GlobalShortcut {

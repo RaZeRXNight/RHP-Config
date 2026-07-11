@@ -64,6 +64,11 @@ r=$((16#${BG:1:2})); g=$((16#${BG:3:2})); b=$((16#${BG:5:2}))
 brightness=$(( (r * 299 + g * 587 + b * 114) / 1000 ))
 [ $brightness -gt 128 ] && LIGHT_MODE="true" || LIGHT_MODE="false"
 if [ "$LIGHT_MODE" = "true" ]; then
+    gsettings set org.gnome.desktop.interface color-scheme 'prefer-light'
+else
+    gsettings set org.gnome.desktop.interface color-scheme 'prefer-dark'
+fi
+if [ "$LIGHT_MODE" = "true" ]; then
     SURFACE_DIM="$P8"
     SURFACE_BRIGHT="$P0"
     SURFACE_CONTAINER_LOWEST=$(darken "$P0" 0.85)

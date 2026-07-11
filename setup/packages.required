@@ -53,6 +53,7 @@ blueman
 # --- Applets / Settings ---
 pavucontrol
 qt6ct
+gsettings-desktop-schemas
 
 # --- Utilities ---
 jq

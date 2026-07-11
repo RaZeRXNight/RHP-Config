@@ -10,9 +10,6 @@
 # Wallpapers / images (user-managed externally)
 .config/hyprlock/wallpapers/
 .config/RHPTheme/Theme/backgrounds/
-.config/aether/theme/backgrounds/
-!.config/aether/theme/backgrounds/current
-!.config/aether/theme/backgrounds/wallhaven-gwmj9l.png
 
 # Shell runtime files
 .config/zsh/.zsh_history
@@ -23,8 +20,8 @@
 .config/QtProject.conf
 
 # Generated aether artifacts
-.config/aether/theme/reload
-.config/aether/theme/quickshell-colors.json
+.config/aether/theme/
+.config/aether/blueprints/
 
 # Neovim generated
 .config/nvim/lazy-lock.json
