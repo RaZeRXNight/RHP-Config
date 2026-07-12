@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 SUNSET_CONF="${XDG_STATE_HOME:-$HOME/.local/state}/hyprsunset"
-DEFAULT_TEMP=6000
+DEFAULT_TEMP=1713
 DEFAULT_GAMMA=100
 TEMP_STEP=500
 GAMMA_STEP=5
@@ -167,15 +167,15 @@ esac
 if ! pgrep -x "hyprsunset" >/dev/null; then
     [ -f "$XDG_RUNTIME_DIR/hypr/$HYPRLAND_INSTANCE_SIGNATURE/.hyprsunset.sock" ] && \
         rm "$XDG_RUNTIME_DIR/hypr/$HYPRLAND_INSTANCE_SIGNATURE/.hyprsunset.sock"
-    hyprctl --quiet dispatch exec -- hyprsunset
+    hyprctl --quiet dispatch exec -- /usr/bin/hyprsunset
 fi
 
 if [ "$toggle_mode" -eq 0 ]; then
-    hyprctl --quiet hyprsunset identity
+    hyprctl --quiet hyprsunset temperature "$identity_temp"
     hyprctl --quiet hyprsunset gamma "$DEFAULT_GAMMA"
 else
     if [ "$action" = "read" ]; then
-        [ "$identity_requested" = true ] && hyprctl --quiet hyprsunset identity || hyprctl --quiet hyprsunset temperature "$currentTemp"
+        [ "$identity_requested" = true ] && hyprctl --quiet hyprsunset temperature "$identity_temp" || hyprctl --quiet hyprsunset temperature "$currentTemp"
         hyprctl --quiet hyprsunset gamma "$currentGamma"
     else
         hyprctl --quiet hyprsunset temperature "$currentTemp"

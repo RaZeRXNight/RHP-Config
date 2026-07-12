@@ -84,7 +84,7 @@ Singleton {
     }
 
     function startHyprsunset() {
-        Quickshell.execDetached(["bash", "-c", `pidof hyprsunset || hyprsunset`]);
+        Quickshell.execDetached(["bash", "-c", `pidof hyprsunset >/dev/null || /usr/bin/hyprsunset`]);
     }
 
     function load() {
