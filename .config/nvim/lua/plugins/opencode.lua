@@ -1,12 +1,35 @@
--- Default configuration with all available options
-require("opencode").setup({
-  preferred_picker = nil, -- 'telescope'/'telescope.nvim', 'fzf'/'fzf-lua', 'mini.pick', 'snacks'/'snacks.nvim', 'select', if nil, it will use the best available picker. Note mini.pick does not support multiple selections
+return {
+  "sudo-tee/opencode.nvim",
+  dependencies = {
+    "nvim-lua/plenary.nvim",
+    {
+      "MeanderingProgrammer/render-markdown.nvim",
+      opts = {
+        anti_conceal = { enabled = false },
+        file_types = { "markdown", "opencode_output" },
+      },
+      ft = { "markdown", "Avante", "copilot-chat", "opencode_output" },
+    },
+    -- Optional, for file mentions and commands completion, pick only one
+    "saghen/blink.cmp",
+    -- 'hrsh7th/nvim-cmp',
+
+    -- Optional, for file mentions picker, pick only one
+    "folke/snacks.nvim",
+    -- 'nvim-telescope/telescope.nvim',
+    -- 'ibhagwan/fzf-lua',
+    -- 'nvim_mini/mini.nvim',
+  },
+  config = function()
+    -- Default configuration with all available options
+    require("opencode").setup({
+      preferred_picker = nil, -- 'telescope'/'telescope.nvim', 'fzf'/'fzf-lua', 'mini.pick', 'snacks'/'snacks.nvim', 'select', if nil, it will use the best available picker. Note mini.pick does not support multiple selections
   preferred_completion = nil, -- 'blink', 'nvim-cmp','vim_complete' if nil, it will use the best available completion
   default_global_keymaps = true, -- If false, disables all default global keymaps
   default_mode = "build", -- 'build' or 'plan' or any custom configured. @see [OpenCode Agents](https://opencode.ai/docs/modes/)
   default_system_prompt = nil, -- Custom system prompt to use for all sessions. If nil, uses the default built-in system prompt
   keymap_prefix = "<leader>o", -- Default keymap prefix for global keymaps change to your preferred prefix and it will be applied to all keymaps starting with <leader>o
-  opencode_executable = "opencode", -- Name of your opencode binary
+  opencode_executable = "/home/razer/.opencode/bin/opencode", -- Absolute path so nvim finds it regardless of runtime PATH
   snapshot_path = nil, -- Override base path for the snapshot git directory (default: $XDG_DATA_HOME/opencode). Appends /snapshot/<project_id>/<worktree_hash>
 
   -- Server configuration for custom/external opencode servers
@@ -245,4 +268,6 @@ require("opencode").setup({
     default_agent = nil, -- Uses the current mode when nil
     instructions = nil, -- Use built-in instructions if nil
   },
-})
+    })
+  end,
+}

@@ -75,9 +75,14 @@ hl.bind(
     { description = "Open YouTube" }
 )
 hl.bind(
-    "SUPER + SHIFT + P",
-    hl.dsp.exec_cmd("rhp-launch-webapp https://photos.google.com"),
-    { description = "Open Google Photos" }
+	"SUPER + SHIFT + P",
+	hl.dsp.exec_cmd("rhp-launch-webapp https://photos.google.com"),
+	{ description = "Open Google Photos" }
+)
+hl.bind(
+	"SUPER + SHIFT + K",
+	hl.dsp.exec_cmd("rhp-launch-webapp https://read.amazon.com"),
+	{ description = "Open Amazon Kindle" }
 )
 
 -- # _____________________________

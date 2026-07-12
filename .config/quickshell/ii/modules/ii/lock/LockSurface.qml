@@ -10,14 +10,59 @@ import qs.modules.common.functions
 import qs.modules.common.panels.lock
 import qs.modules.ii.bar as Bar
 import Quickshell
+import Quickshell.Io
 import Quickshell.Services.SystemTray
 
 MouseArea {
     id: root
+    anchors.fill: parent
     required property LockContext context
     property bool active: false
     property bool showInputField: active || context.currentText.length > 0
     readonly property bool requirePasswordToPower: Config.options.lock.security.requirePasswordToPower
+
+    // Current wallpaper, resolved from aether-wallpaper (Config.options.background.wallpaperPath is empty on this system)
+    property string wallpaperSource: Config.options.background.wallpaperPath
+
+    Process {
+        id: wallpaperProc
+        command: ["bash", "-c", "aether-wallpaper"]
+        stdout: StdioCollector {
+            onStreamFinished: {
+                const p = text.trim()
+                if (p && p.length > 0) root.wallpaperSource = p
+            }
+        }
+    }
+
+    // Wallpaper background
+    Item {
+        id: backgroundLayer
+        z: 0
+        anchors.fill: parent
+
+        StyledImage {
+            id: wallpaper
+            anchors.fill: parent
+            source: root.wallpaperSource
+            fillMode: Image.PreserveAspectCrop
+            visible: status === Image.Ready
+            cache: false
+        }
+
+        GaussianBlur {
+            anchors.fill: parent
+            source: wallpaper
+            radius: Config.options.lock.blur.enable ? Config.options.lock.blur.radius : 0
+            samples: radius * 2 + 1
+            visible: Config.options.lock.blur.enable
+
+            Rectangle {
+                anchors.fill: parent
+                color: ColorUtils.transparentize(Appearance.colors.colLayer0, 0.7)
+            }
+        }
+    }
 
     // Force focus on entry
     function forceFieldFocus() {
@@ -54,6 +99,7 @@ MouseArea {
 
     // Init
     Component.onCompleted: {
+        wallpaperProc.running = true
         forceFieldFocus();
         toolbarScale = 1;
         toolbarOpacity = 1;
