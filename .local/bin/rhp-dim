@@ -1,0 +1,24 @@
+#!/usr/bin/env bash
+# Slowly dim the display backlight to a floor over DURATION seconds.
+# Usage: rhp-dim DURATION FLOOR_PCT
+# Launched in the background by hypridle; kill it (pkill -f rhp-dim) to stop.
+
+duration="${1:-150}"
+floor="${2:-10}"
+
+get_brightness() {
+    brightnessctl info 2>/dev/null | grep -oP '(?<=\()\d+(?=%)'
+}
+
+start=$(get_brightness)
+[ -z "$start" ] && exit 0
+[ "$start" -le "$floor" ] && exit 0
+
+steps=30
+interval=$(awk "BEGIN{printf \"%.2f\", $duration/$steps}")
+
+for i in $(seq 1 "$steps"); do
+    val=$(awk "BEGIN{printf \"%d\", $start - ($start-$floor)*$i/$steps}")
+    brightnessctl set "${val}%" >/dev/null 2>&1
+    sleep "$interval"
+done
