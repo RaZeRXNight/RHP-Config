@@ -55,6 +55,14 @@ pavucontrol
 qt6ct
 gsettings-desktop-schemas
 
+# --- Login screen (SDDM + qylock Qt6 theme deps) ---
+sddm
+qt6-declarative
+qt6-5compat
+qt6-svg
+qt6-multimedia
+qt6-multimedia-ffmpeg
+
 # --- Utilities ---
 jq
 curl

@@ -8,6 +8,7 @@ Designed for lightweight operation: Hyprland compositor, end-4 quickshell bar, A
 
 - **Hyprland** — Wayland compositor (Lua config, modular)
 - **Quickshell II** — bar + launcher + workspace overview + lock screen + session screen
+- **SDDM** — graphical login screen (qylock `material-you` theme)
 - **Aether** — color palette generation injected into Quickshell, Hyprland, Neovim, VS Code, Zed
 - **awww** — animated wallpaper daemon
 - **PipeWire / WirePlumber** — audio
@@ -102,6 +103,15 @@ The installer walks through:
 
 - Set Zsh as default shell: `chsh -s /bin/zsh`
 - Set wallpaper: `~/.local/bin/aether-wallpaper`
+
+## Login screen (SDDM)
+
+SDDM is the graphical display manager, themed with [Darkkal44/qylock](https://github.com/Darkkal44/qylock) (`material-you` by default).
+
+- Set up / re-theme: `./setup/sddm.sh [theme]` (defaults to `material-you`). The script clones qylock, copies only the chosen theme into `/usr/share/sddm/themes`, writes `/etc/sddm.conf.d/` drop-ins, and enables `sddm.service`.
+- On first login, pick the **Hyprland (uwsm)** session in the greeter — SDDM remembers it afterwards.
+- The greeter runs on tty1; your session on tty2. `getty@tty1` stays enabled as a text-console fallback (also reachable via `Ctrl+Alt+F2`–`F6`).
+- To revert to launching Hyprland from a TTY login: `sudo systemctl disable sddm.service` and re-enable the commented block in `.config/zsh/user.zsh`.
 
 ## Credits
 

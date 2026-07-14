@@ -14,9 +14,12 @@ if [[ $- == *i* ]]; then
     fi
 fi
 
-if uwsm check may-start && uwsm select; then 
-  exec uwsm start default
-fi
+# Session start is handled by SDDM (see setup/sddm.sh). Pick the
+# "Hyprland (uwsm)" session in the greeter. To go back to launching Hyprland
+# from a TTY login instead, uncomment the block below and disable sddm.service:
+# if uwsm check may-start && uwsm select; then
+#   exec uwsm start default
+# fi
 
 #   Overrides 
 # HYDE_ZSH_NO_PLUGINS=1 # Set to 1 to disable loading of oh-my-zsh plugins, useful if you want to use your zsh plugins system 

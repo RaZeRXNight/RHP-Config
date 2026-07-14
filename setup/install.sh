@@ -413,6 +413,11 @@ if confirm "Enable Hyprland systemd user services?"; then
   info "Services enabled."
 fi
 
+# SDDM login screen (qylock theme)
+if confirm "Set up SDDM login screen (qylock material-you theme)?"; then
+  "$SETUP_DIR/sddm.sh"
+fi
+
 # ──────────────────────────────────────────────
 # Summary
 # ──────────────────────────────────────────────
